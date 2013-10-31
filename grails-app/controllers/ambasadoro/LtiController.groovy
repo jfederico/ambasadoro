@@ -2,12 +2,22 @@ package ambasadoro
 
 class LtiController {
 
-    def index() { }
+	AmbasadoroService ambasadoroService
 	
-	def tool() { }
+    def index() { 
+		ambasadoroService.logParameters(params)
+	}
 	
-	def tool_cartridge() { }
+	def tool() {
+		ambasadoroService.logParameters(params)
+	}
 	
-	def tool_ui() { }
+	def tool_cartridge() {
+		ambasadoroService.logParameters(params)
+	}
+	
+	def tool_ui() {
+		ambasadoroService.logParameters(params)
+	}
 	
 }
