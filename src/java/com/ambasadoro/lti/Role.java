@@ -19,6 +19,11 @@
 
 package com.ambasadoro.lti;
 
+/**
+ * LTI Role definitions.
+ * 
+ * @author Jesus Federico
+ */
 public class Role {
 
     public static String STUDENT = "Student";
