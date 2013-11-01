@@ -1,12 +1,15 @@
 package ambasadoro
 
 class Entity {
+    // Auto Timestamp
+    Date dateCreated
+    Date lastUpdated
 
-	String 	key
-	String	secret
-	int		tc_id
-	int		tp_id
-	
+    String  lti_key
+    String  lti_secret
+    String  tc_type
+    String  tp_type
+
     static constraints = {
     }
 }
