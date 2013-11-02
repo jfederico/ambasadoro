@@ -2,8 +2,8 @@ dataSource {
     pooled = false
 	dbCreate = "update" // one of 'create', 'create-drop', 'update', 'validate', ''
     driverClassName = "com.mysql.jdbc.Driver"
-    dialect = org.hibernate.dialect.MySQLInnoDBDialect
-    //dialect = org.hibernate.dialect.MySQL5InnoDBDialect	//For MySQL 5.5 and newer
+    //dialect = org.hibernate.dialect.MySQLInnoDBDialect
+    dialect = org.hibernate.dialect.MySQL5InnoDBDialect	//For MySQL 5.5 and newer
     username = "ambasadoro"
     password = "password"
 
