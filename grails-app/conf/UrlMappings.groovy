@@ -5,7 +5,13 @@ class UrlMappings {
          * URL mapping for LTI access 
          *  Handled by LtiController
          */
-        "/lti/tool?"(controller:'tool_launch')
+        "/$controller/tool?"{
+            action = [GET:"tool_ui", POST:"tool_launch"]
+        }
+
+        "/$controller/*.xml"{
+            action = 'tool_cartridge'
+        }
 
 		"/$controller/$action?/$id?"{
 			constraints {
@@ -14,6 +20,7 @@ class UrlMappings {
 		}
 
 		"/"(view:"/index")
+        "404"(view:'/error')
 		"500"(view:'/error')
 	}
 }
