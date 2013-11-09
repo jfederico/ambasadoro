@@ -1,4 +1,4 @@
-package org.ambasadoro.lti.v1_0;
+package org.ambasadoro.lti.v1_2;
 
 import org.ambasadoro.lti.LTIConstantsBase;
 
