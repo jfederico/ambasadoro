@@ -1,7 +1,7 @@
 package org.ambasadoro.lti.v110;
 
-import org.ambasadoro.lti.Constants;
+import org.ambasadoro.lti.LTIConstantsBase;
 
-public class Constants_110 extends Constants{
+public class Constants_110 extends LTIConstantsBase{
 
 }

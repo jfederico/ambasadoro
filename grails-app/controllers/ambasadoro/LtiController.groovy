@@ -1,9 +1,9 @@
 package ambasadoro
 
 import com.ambasadoro.engine.EngineFactory
-import com.ambasadoro.engine.LTIEngineFactory
-import com.ambasadoro.engine.lti.ToolProviderEngine;
-import com.ambasadoro.lti.Constants
+import com.ambasadoro.engine.IEngine
+import com.ambasadoro.engine.IEngineFactory
+import com.ambasadoro.engine.VendorCodes;
 
 import net.oauth.OAuth;
 
@@ -11,30 +11,36 @@ class LtiController {
 
 	AmbasadoroService ambasadoroService
 	
-    EngineFactory ltiEngineFactory = new LTIEngineFactory()
+    IEngineFactory ltiEngineFactory = new EngineFactory()
     
     def index() { 
+        log.debug "###############index###############"
 		ambasadoroService.logParameters(params)
 	}
 	
-	def tool_launch() {
+	def tool() {
+        log.debug "###############tool###############"
 		ambasadoroService.logParameters(params)
         
-        /* First test if the request is post and comes with the minimum information, 
-           meaning is Oauth request. It must have a key */
-        
-        String lti_key = (String)params.get(OAuth.OAUTH_CONSUMER_KEY)
-        
-        // It will send the corresponding TP code stored in the database (entity table)
-        ToolProviderEngine ltiEngine = ltiEngineFactory.createEngine(Constants.TP_BIGBLUEBUTTON, params)
+        try {
+            log.debug "  - Look for the corresponding Ambasadoro instance"
+            Ambasadoro ambasadoro = ambasadoroService.getAmbasadoroInstance(params)
+            log.debug "  - Initializing ltiEngine"
+            IEngine ltiEngine = ltiEngineFactory.createEngine(VendorCodes.TP_CODE_TEST, params)
+            log.debug "  - ltiEngine code [" + ltiEngine.getCode() + "]"
+        } catch(Exception e) {
+            log.debug "  - Exception: " + e.getMessage()
+        }
         
 	}
 	
-	def tool_cartridge() {
+	def toolCartridge() {
+        log.debug "###############toolCartridge###############"
 		ambasadoroService.logParameters(params)
 	}
 	
-	def tool_ui() {
+	def toolUi() {
+        log.debug "###############toolUi###############"
 		ambasadoroService.logParameters(params)
 	}
 	

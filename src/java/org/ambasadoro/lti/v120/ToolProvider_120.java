@@ -1,7 +1,7 @@
 package org.ambasadoro.lti.v120;
 
-import org.ambasadoro.lti.ToolProvider;
+import org.ambasadoro.lti.ToolProviderBase;
 
-public class ToolProvider_120 extends ToolProvider {
+public class ToolProvider_120 extends ToolProviderBase {
 
 }

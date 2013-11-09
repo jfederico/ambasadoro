@@ -5,10 +5,10 @@ class Ambasadoro {
     Date dateCreated
     Date lastUpdated
 
-    String  lti_key
-    String  lti_secret
-    String  tool_code
-    String  tcool_consumer_code
+    String  ltiKey
+    String  ltiSecret
+    String  toolCode
+    String  toolConsumerCode
     String  meta
 
     static constraints = {

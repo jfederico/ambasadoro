@@ -6,11 +6,11 @@ class UrlMappings {
          *  Handled by LtiController
          */
         "/$controller/tool?"{
-            action = [GET:"tool_ui", POST:"tool_launch"]
+            action = [GET:"toolUi", POST:"tool"]
         }
 
         "/$controller/*.xml"{
-            action = 'tool_cartridge'
+            action = 'toolCartridge'
         }
 
 		"/$controller/$action?/$id?"{
