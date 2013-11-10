@@ -1,5 +1,7 @@
-package ambasadoro
+package com.ambasadoro
 
+import com.ambasadoro.Ambasadoro;
+import com.ambasadoro.AmbasadoroService;
 import com.ambasadoro.engine.EngineFactory
 import com.ambasadoro.engine.IEngine
 import com.ambasadoro.engine.IEngineFactory
@@ -26,8 +28,8 @@ class LtiController {
             log.debug "  - Look for the corresponding Ambasadoro instance"
             Ambasadoro ambasadoro = ambasadoroService.getAmbasadoroInstance(params)
             log.debug "  - Initializing ltiEngine"
-            IEngine ltiEngine = ltiEngineFactory.createEngine(VendorCodes.TP_CODE_TEST, params)
-            log.debug "  - ltiEngine code [" + ltiEngine.getCode() + "]"
+            IEngine ltiEngine = ltiEngineFactory.createEngine(ambasadoro, params)
+            log.debug "  - Initialized ltiEngine. code [" + ltiEngine.getCode() + "]"
         } catch(Exception e) {
             log.debug "  - Exception: " + e.getMessage()
         }

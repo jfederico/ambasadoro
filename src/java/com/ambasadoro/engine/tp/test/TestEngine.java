@@ -2,6 +2,7 @@ package com.ambasadoro.engine.tp.test;
 
 import java.util.Map;
 
+import com.ambasadoro.Ambasadoro;
 import com.ambasadoro.engine.IEngine;
 import com.ambasadoro.engine.VendorCodes;
 
@@ -16,7 +17,7 @@ public class TestEngine implements IEngine {
     ILTIConstants ltiConstants = new LTIConstants();
     IToolProvider toolProvider;
 
-    public TestEngine(Map<String, String> params){
+    public TestEngine(Ambasadoro ambasadoro, Map<String, String> params){
         System.out.println("Creating ltiEngine for [" + code + "]");
         toolProvider = new ToolProvider(params);
     }

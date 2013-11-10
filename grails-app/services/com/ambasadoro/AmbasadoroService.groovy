@@ -1,4 +1,6 @@
-package ambasadoro
+package com.ambasadoro
+
+import com.ambasadoro.Ambasadoro;
 
 import net.oauth.OAuth;
 
