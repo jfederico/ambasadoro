@@ -1,7 +1,5 @@
 package com.ambasadoro
 
-import com.ambasadoro.Ambasadoro;
-
 import net.oauth.OAuth;
 
 class AmbasadoroService {
@@ -13,16 +11,16 @@ class AmbasadoroService {
     }
     
     def getAmbasadoroInstance(params) throws Exception{
-        Ambasadoro a
-        if (params.containsKey(OAuth.OAUTH_CONSUMER_KEY)) {         //oauth_consumer_key
-            def ltiKey = params.get(OAuth.OAUTH_CONSUMER_KEY)
-            a = Ambasadoro.findByLtiKey(ltiKey)
-            if( a == null)
-                throw new Exception("There is no instance for ltiKey " + "[" + ltiKey + "].")
+        Ambasadoro ambasadoro
+        if (params.containsKey("id")) {
+            def id = params.get("id")
+            ambasadoro = Ambasadoro.findById(id)
+            if( ambasadoro == null)
+                throw new Exception("There is no instance for id " + "[" + id + "].")
         } else {
             throw new Exception("Parameter " + "[" + OAuth.OAUTH_CONSUMER_KEY + "] not included.")
         }
-        return a
+        return ambasadoro
 
     }
 }

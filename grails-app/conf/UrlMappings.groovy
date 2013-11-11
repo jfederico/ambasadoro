@@ -5,7 +5,7 @@ class UrlMappings {
          * URL mapping for LTI access 
          *  Handled by LtiController
          */
-        "/$controller/tool?"{
+        "/$controller/tool?/$id?"{
             action = [GET:"toolUi", POST:"tool"]
         }
 

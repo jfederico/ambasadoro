@@ -5,11 +5,12 @@ class Ambasadoro {
     Date dateCreated
     Date lastUpdated
 
-    public String  ltiKey
-    public String  ltiSecret
-    public String  toolCode
-    public String  toolConsumerCode
-    public String  meta
+    String  ltiKey
+    String  ltiSecret
+    String  ltiEndPoint
+    String  toolCode
+    String  toolConsumerCode
+    String  meta
 
     static constraints = {
     }

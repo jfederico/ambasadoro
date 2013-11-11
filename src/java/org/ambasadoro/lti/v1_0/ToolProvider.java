@@ -6,7 +6,8 @@ import org.ambasadoro.lti.ToolProviderBase;
 
 public class ToolProvider extends ToolProviderBase{
 
-    public ToolProvider(Map<String, String> params){
+    public ToolProvider(Map<String, String> params) throws Exception{
+        super(params);
         System.out.println("ToolProvider v1.0 initializad");
     }
 }
