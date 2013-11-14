@@ -3,13 +3,14 @@ package com.ambasadoro
 import net.oauth.OAuth;
 
 class AmbasadoroService {
+    def endpoint
 
     def logParameters(Object params) {
         log.debug "----------------------------------"
         for( param in params ) log.debug "${param.getKey()}=${param.getValue()}"
         log.debug "----------------------------------"
     }
-    
+
     def getAmbasadoroInstance(params) throws Exception{
         Ambasadoro ambasadoro
         if (params.containsKey("id")) {
@@ -22,5 +23,13 @@ class AmbasadoroService {
         }
         return ambasadoro
 
+    }
+
+    def retrieveEndpoint() {
+        return retrieveEndpoint("http")
+    }
+
+    def retrieveEndpoint(protocol) {
+        return protocol + "://" + endpoint + "/ambasadoro"
     }
 }

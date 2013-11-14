@@ -38,6 +38,7 @@ public class ToolProviderBase implements IToolProvider {
         HMAC_SHA1 hmac = new HMAC_SHA1();
         hmac.setConsumerSecret(secret);
         String baseString = HMAC_SHA1.getBaseString(oam);
+        System.out.println("Base Message String = [ " + baseString + " ]\n");
         if( hmac.isValid(oauth_signature, baseString) )
             validSignature = true;
         System.out.println("Calculated: " + hmac.getSignature(baseString) + " Received: " + oauth_signature);
@@ -49,15 +50,11 @@ public class ToolProviderBase implements IToolProvider {
 
         Properties reqProp = new Properties();
         for (String key : params.keySet()) {
-            if (key.equals("action") || key.equals("controller") ) {
-                // Ignore as these are the grails controller and action tied to this request.
-                continue;
-            } else if (key.equals("oauth_signature") ) {
+            if (key.equals("oauth_signature") ) {
                 // We don't need this as part of the base string
                 continue;
             }
             String value = params.get(key);
-            //System.out.println(key + "=" + value);
             reqProp.setProperty(key, value);
         }
 

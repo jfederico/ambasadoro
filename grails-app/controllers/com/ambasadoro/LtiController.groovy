@@ -3,6 +3,7 @@ package com.ambasadoro
 import java.util.Properties;
 
 import net.oauth.OAuth
+
 import net.oauth.OAuthMessage
 import net.oauth.signature.OAuthSignatureMethod
 import net.oauth.signature.HMAC_SHA1
@@ -31,13 +32,17 @@ class LtiController {
         log.debug "###############tool###############"
 		ambasadoroService.logParameters(params)
 
-        log.debug hasValidSignature(params)
-
         try {
             log.debug "  - Look for the corresponding Ambasadoro instance"
             Ambasadoro ambasadoro = ambasadoroService.getAmbasadoroInstance(params)
+            String endpoint = ambasadoroService.retrieveEndpoint(request.isSecure()?"https":"http") + "/lti/tool/" + params.get("id")
+
             log.debug "  - Initializing ltiEngine"
-            IEngine ltiEngine = ltiEngineFactory.createEngine(ambasadoro, params)
+            //sanitizePrametersForBaseString (remove grails params)
+            params.remove("id")
+            params.remove("action")
+            params.remove("controller")
+            IEngine ltiEngine = ltiEngineFactory.createEngine(ambasadoro, params, endpoint)
             log.debug "  - Initialized ltiEngine. code [" + ltiEngine.getCode() + "]"
         } catch(Exception e) {
             log.debug "  - Exception: " + e.getMessage()
@@ -47,6 +52,13 @@ class LtiController {
 	def toolCartridge() {
         log.debug "###############toolCartridge###############"
 		ambasadoroService.logParameters(params)
+        try {
+            log.debug "  - Look for the corresponding Ambasadoro instance"
+            Ambasadoro ambasadoro = ambasadoroService.getAmbasadoroInstance(params)
+            render(text: getCartridgeXML(ambasadoro), contentType: "text/xml", encoding: "UTF-8")
+        } catch(Exception e) {
+            log.debug "  - Exception: " + e.getMessage()
+        }
 	}
 	
 	def toolUi() {
@@ -54,45 +66,37 @@ class LtiController {
 		ambasadoroService.logParameters(params)
 	}
     
-    
-    private boolean hasValidSignature(Object params) {
-        boolean validSignature = false
+    private String getCartridgeXML(Ambasadoro ambasadoro){
+        def cartridge = '' +
+        '<?xml version="1.0" encoding="UTF-8"?>' +
+        '<cartridge_basiclti_link xmlns="http://www.imsglobal.org/xsd/imslticc_v1p0"' +
+        '       xmlns:blti = "http://www.imsglobal.org/xsd/imsbasiclti_v1p0"' +
+        '       xmlns:lticm ="http://www.imsglobal.org/xsd/imslticm_v1p0"' +
+        '       xmlns:lticp ="http://www.imsglobal.org/xsd/imslticp_v1p0"' +
+        '       xmlns:xsi = "http://www.w3.org/2001/XMLSchema-instance"' +
+        '       xsi:schemaLocation = "http://www.imsglobal.org/xsd/imslticc_v1p0 http://www.imsglobal.org/xsd/lti/ltiv1p0/imslticc_v1p0.xsd' +
+        '                             http://www.imsglobal.org/xsd/imsbasiclti_v1p0 http://www.imsglobal.org/xsd/lti/ltiv1p0/imsbasiclti_v1p0.xsd' +
+        '                             http://www.imsglobal.org/xsd/imslticm_v1p0 http://www.imsglobal.org/xsd/lti/ltiv1p0/imslticm_v1p0.xsd' +
+        '                             http://www.imsglobal.org/xsd/imslticp_v1p0 http://www.imsglobal.org/xsd/lti/ltiv1p0/imslticp_v1p0.xsd">' +
+        '    <blti:title>ePortfolio</blti:title>' +
+        '    <blti:description>Single Sign On into Chalk&amp;Wire ePortfolio</blti:description>' +
+        '    <blti:launch_url>' + ambasadoroService.retrieveEndpoint() + '/lti/tool/' + ambasadoro.getId() + '</blti:launch_url>' +
+        '    <blti:secure_launch_url>' + ambasadoroService.retrieveEndpoint('https') + '/lti/tool/' + ambasadoro.getId() + '</blti:secure_launch_url>' +
+        '    <blti:icon>' + ambasadoroService.retrieveEndpoint() + '/images/' + ambasadoro.getId() + '/favicon.ico</blti:icon>' +
+        '    <blti:secure_icon>' + ambasadoroService.retrieveEndpoint('https') + '/images/' + ambasadoro.getId() + '/favicon.ico</blti:secure_icon>' +
+        '    <blti:vendor>' +
+        '        <lticp:code>' + ambasadoro.getToolCode() + '</lticp:code>' +
+        '        <lticp:name>toolName</lticp:name>' +
+        '        <lticp:description>toolDescription</lticp:description>' +
+        '        <lticp:url>toolUrl</lticp:url>' +
+        '        <lticp:contact>' +
+        '            <lticp:email>toolContactEmail</lticp:email>' +
+        '        </lticp:contact>' +
+        '    </blti:vendor>' +
+        '    <cartridge_bundle identifierref="BLTI001_Bundle"/>' +
+        '    <cartridge_icon identifierref="BLTI001_Icon"/>' +
+        '</cartridge_basiclti_link>'
 
-        if (params.containsKey(OAuth.OAUTH_SIGNATURE)) {
-            String signature = params.get(OAuth.OAUTH_SIGNATURE)
-            String method = request.getMethod().toUpperCase()
-            String URL = "http://192.168.44.138:8888/ambasadoro/lti/tool/1"
-            String conSecret = "123"
-            Object postProp = sanitizePrametersForBaseString(params)
-            
-            OAuthMessage oam = new OAuthMessage(method, URL, ((Properties)postProp).entrySet())
-            HMAC_SHA1 hmac = new HMAC_SHA1()
-            hmac.setConsumerSecret(conSecret)
-
-            log.debug("Base Message String = [ " + hmac.getBaseString(oam) + " ]\n")
-            String calculatedSignature = hmac.getSignature(hmac.getBaseString(oam))
-            log.debug("Calculated: " + calculatedSignature + " Received: " + signature)
-            validSignature = calculatedSignature.equals(signature)
-
-        }
-
-        return validSignature
-    }
-
-    private Properties sanitizePrametersForBaseString(Object params) {
-        Properties reqProp = new Properties();
-        for (String key : params.keySet()) {
-            if (key == "action" || key == "controller") {
-                // Ignore as these are the grails controller and action tied to this request.
-                continue
-            } else if (key == "oauth_signature") {
-                // We don't need this as part of the base string
-                continue
-            }
-
-            reqProp.setProperty(key, params.get(key));
-        }
-
-        return reqProp
+        return cartridge
     }
 }

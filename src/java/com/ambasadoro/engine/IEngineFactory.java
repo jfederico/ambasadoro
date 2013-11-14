@@ -1,11 +1,10 @@
 package com.ambasadoro.engine;
 
-import com.ambasadoro.Ambasadoro;
-
 import java.util.Map;
+
+import com.ambasadoro.Ambasadoro;
 
 public interface IEngineFactory {
 
-    public IEngine createEngine(Ambasadoro ambasadoro, Map<String, String> params) throws Exception;
-
+    public IEngine createEngine(Ambasadoro ambasadoro, Map<String, String> params, String endpoint) throws Exception;
 }

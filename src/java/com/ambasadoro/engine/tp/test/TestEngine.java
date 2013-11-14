@@ -13,6 +13,11 @@ import org.ambasadoro.lti.v1_0.*;
 import org.json.JSONObject;
 
 public class TestEngine implements IEngine {
+    public static final String TP_NAME = "Test";
+    public static final String TP_DESCRIPTION = "Tool provider for testing purposes.";
+    public static final String TP_URL = "http://test.123it.ca/";
+    public static final String TP_CONTACT_EMAIL = "support@123it.ca";
+
     String code = VendorCodes.TP_CODE_TEST;
     
     ILTIConstants ltiConstants = new LTIConstants();
@@ -20,7 +25,7 @@ public class TestEngine implements IEngine {
     Map<String, String> properties = new HashMap<String, String>();
     JSONObject meta;
 
-    public TestEngine(Ambasadoro ambasadoro, Map<String, String> params) throws Exception {
+    public TestEngine(Ambasadoro ambasadoro, Map<String, String> params, String endpoint) throws Exception {
         //System.out.println("Creating ltiEngine for [" + code + "]");
         try {
             toolProvider = new ToolProvider(params);
@@ -28,9 +33,7 @@ public class TestEngine implements IEngine {
             //meta = new JSONObject("{'meta': { 'properties': { 'toolEndPoint': 'http://localhost/', 'toolKey': 'xxx', 'toolSecret': 'yyy'} } }");
             //System.out.println(meta.get("meta"));
             
-            System.out.println(ambasadoro.getLtiEndPoint());
-            System.out.println(ambasadoro.getLtiSecret());
-            if( !toolProvider.hasValidSignature(ambasadoro.getLtiEndPoint(), ambasadoro.getLtiSecret()) )
+            if( !toolProvider.hasValidSignature(endpoint, ambasadoro.getLtiSecret()) )
                 throw new Exception("OAuth signature is NOT valid");
             else
                 System.out.println("OAuth signature is valid");

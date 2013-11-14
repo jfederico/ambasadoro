@@ -12,7 +12,7 @@ class BootStrap {
         }
         ambasadoro.ltiKey = "test"
         ambasadoro.ltiSecret = "123"
-        ambasadoro.ltiEndPoint = "http://192.168.44.138:8888/ambasadoro/lti/tool/1"
+        ambasadoro.ltiEndPoint = "http://192.168.0.21/ambasadoro/lti/tool/1"
         ambasadoro.toolCode = "test"
         ambasadoro.toolConsumerCode = "moodle"
         ambasadoro.meta = "{\"meta\":{\"properties\":{\"toolKey\":\"xxx\",\"toolSecret\":\"yyy\",\"toolEndPoint\":\"http://localhost/\"}}}"
