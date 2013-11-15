@@ -12,9 +12,10 @@ class BootStrap {
         }
         ambasadoro.ltiKey = "test"
         ambasadoro.ltiSecret = "123"
-        ambasadoro.ltiEndPoint = "http://192.168.0.21/ambasadoro/lti/tool/1"
-        ambasadoro.toolCode = "test"
-        ambasadoro.toolConsumerCode = "moodle"
+        ambasadoro.toolTitle = "Tester"
+        ambasadoro.toolDescription = "This is a testing Tool Provider"
+        ambasadoro.toolVendorCode = "test"
+        ambasadoro.toolConsumerVendorCode = "moodle"
         ambasadoro.meta = "{\"meta\":{\"properties\":{\"toolKey\":\"xxx\",\"toolSecret\":\"yyy\",\"toolEndPoint\":\"http://localhost/\"}}}"
         log.debug ambasadoro
         if ( !ambasadoro.save(flush:true) ){

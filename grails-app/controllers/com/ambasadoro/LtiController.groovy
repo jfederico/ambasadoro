@@ -21,7 +21,7 @@ class LtiController {
 
 	AmbasadoroService ambasadoroService
 	
-    IEngineFactory ltiEngineFactory = new EngineFactory()
+    IEngineFactory ltiEngineFactory = EngineFactory.getInstance()
     
     def index() { 
         log.debug "###############index###############"
@@ -42,8 +42,8 @@ class LtiController {
             params.remove("id")
             params.remove("action")
             params.remove("controller")
-            IEngine ltiEngine = ltiEngineFactory.createEngine(ambasadoro, params, endpoint)
-            log.debug "  - Initialized ltiEngine. code [" + ltiEngine.getCode() + "]"
+            IEngine engine = ltiEngineFactory.createEngine(ambasadoro, params, endpoint)
+            log.debug "  - Initialized ltiEngine. code [" + engine.getCode() + "]"
         } catch(Exception e) {
             log.debug "  - Exception: " + e.getMessage()
         }
@@ -55,7 +55,8 @@ class LtiController {
         try {
             log.debug "  - Look for the corresponding Ambasadoro instance"
             Ambasadoro ambasadoro = ambasadoroService.getAmbasadoroInstance(params)
-            render(text: getCartridgeXML(ambasadoro), contentType: "text/xml", encoding: "UTF-8")
+            Object engineClass = ltiEngineFactory.getEngineClass(ambasadoro)
+            render(text: getCartridgeXML(ambasadoro, engineClass), contentType: "text/xml", encoding: "UTF-8")
         } catch(Exception e) {
             log.debug "  - Exception: " + e.getMessage()
         }
@@ -66,7 +67,7 @@ class LtiController {
 		ambasadoroService.logParameters(params)
 	}
     
-    private String getCartridgeXML(Ambasadoro ambasadoro){
+    private String getCartridgeXML(Ambasadoro ambasadoro, Object engineClass){
         def cartridge = '' +
         '<?xml version="1.0" encoding="UTF-8"?>' +
         '<cartridge_basiclti_link xmlns="http://www.imsglobal.org/xsd/imslticc_v1p0"' +
@@ -78,19 +79,19 @@ class LtiController {
         '                             http://www.imsglobal.org/xsd/imsbasiclti_v1p0 http://www.imsglobal.org/xsd/lti/ltiv1p0/imsbasiclti_v1p0.xsd' +
         '                             http://www.imsglobal.org/xsd/imslticm_v1p0 http://www.imsglobal.org/xsd/lti/ltiv1p0/imslticm_v1p0.xsd' +
         '                             http://www.imsglobal.org/xsd/imslticp_v1p0 http://www.imsglobal.org/xsd/lti/ltiv1p0/imslticp_v1p0.xsd">' +
-        '    <blti:title>ePortfolio</blti:title>' +
-        '    <blti:description>Single Sign On into Chalk&amp;Wire ePortfolio</blti:description>' +
+        '    <blti:title>' + ambasadoro.getToolTitle() + '</blti:title>' +
+        '    <blti:description>' + ambasadoro.getToolDescription() + '</blti:description>' +
         '    <blti:launch_url>' + ambasadoroService.retrieveEndpoint() + '/lti/tool/' + ambasadoro.getId() + '</blti:launch_url>' +
         '    <blti:secure_launch_url>' + ambasadoroService.retrieveEndpoint('https') + '/lti/tool/' + ambasadoro.getId() + '</blti:secure_launch_url>' +
         '    <blti:icon>' + ambasadoroService.retrieveEndpoint() + '/images/' + ambasadoro.getId() + '/favicon.ico</blti:icon>' +
         '    <blti:secure_icon>' + ambasadoroService.retrieveEndpoint('https') + '/images/' + ambasadoro.getId() + '/favicon.ico</blti:secure_icon>' +
         '    <blti:vendor>' +
-        '        <lticp:code>' + ambasadoro.getToolCode() + '</lticp:code>' +
-        '        <lticp:name>toolName</lticp:name>' +
-        '        <lticp:description>toolDescription</lticp:description>' +
-        '        <lticp:url>toolUrl</lticp:url>' +
+        '        <lticp:code>' + ambasadoro.getToolVendorCode() + '</lticp:code>' +
+        '        <lticp:name>' + engineClass.TP_VENDOR_NAME + '</lticp:name>' +
+        '        <lticp:description>' + engineClass.TP_VENDOR_DESCRIPTION + '</lticp:description>' +
+        '        <lticp:url>' + engineClass.TP_VENDOR_URL + '</lticp:url>' +
         '        <lticp:contact>' +
-        '            <lticp:email>toolContactEmail</lticp:email>' +
+        '            <lticp:email>' + engineClass.TP_VENDOR_CONTACT_EMAIL + '</lticp:email>' +
         '        </lticp:contact>' +
         '    </blti:vendor>' +
         '    <cartridge_bundle identifierref="BLTI001_Bundle"/>' +

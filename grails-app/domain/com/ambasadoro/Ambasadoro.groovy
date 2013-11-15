@@ -7,14 +7,15 @@ class Ambasadoro {
 
     String  ltiKey
     String  ltiSecret
-    String  ltiEndPoint
-    String  toolCode
-    String  toolConsumerCode
+    String  toolTitle
+    String  toolDescription
+    String  toolVendorCode
+    String  toolConsumerVendorCode
     String  meta
 
     static constraints = {
     }
     
-    String toString() {"[${this.ltiKey}:${this.ltiSecret}]${this.toolCode}:${this.toolConsumerCode}::${this.meta}"}
+    String toString() {"[${this.ltiKey}:${this.ltiSecret}]${this.toolTitle}:${this.toolDescription}:${this.toolVendorCode}:${this.toolConsumerVendorCode}::${this.meta}"}
     
 }

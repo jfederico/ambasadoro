@@ -13,12 +13,13 @@ import org.ambasadoro.lti.v1_0.*;
 import org.json.JSONObject;
 
 public class TestEngine implements IEngine {
-    public static final String TP_NAME = "Test";
-    public static final String TP_DESCRIPTION = "Tool provider for testing purposes.";
-    public static final String TP_URL = "http://test.123it.ca/";
-    public static final String TP_CONTACT_EMAIL = "support@123it.ca";
+    public static final String TP_VENDOR_CODE = VendorCodes.TP_CODE_TEST;
+    public static final String TP_VENDOR_NAME = "Test";
+    public static final String TP_VENDOR_DESCRIPTION = "Tool provider for testing purposes.";
+    public static final String TP_VENDOR_URL = "http://test.123it.ca/";
+    public static final String TP_VENDOR_CONTACT_EMAIL = "support@123it.ca";
 
-    String code = VendorCodes.TP_CODE_TEST;
+    Ambasadoro ambasadoro;
     
     ILTIConstants ltiConstants = new LTIConstants();
     IToolProvider toolProvider;
@@ -27,6 +28,8 @@ public class TestEngine implements IEngine {
 
     public TestEngine(Ambasadoro ambasadoro, Map<String, String> params, String endpoint) throws Exception {
         //System.out.println("Creating ltiEngine for [" + code + "]");
+        this.ambasadoro = ambasadoro;
+
         try {
             toolProvider = new ToolProvider(params);
             meta = new JSONObject(ambasadoro.getMeta());
@@ -42,10 +45,18 @@ public class TestEngine implements IEngine {
         }
     }
     
-    public String getCode(){
-        return this.code;
+    public String getToolTitle(){
+        return ambasadoro.getToolTitle();
     }
-    
+
+    public String getToolDescription(){
+        return ambasadoro.getToolDescription();
+    }
+
+    public String getToolVendorCode(){
+        return TP_VENDOR_CODE;
+    }
+
     public boolean hasAllRequiredParams(){
         return false;
     }
