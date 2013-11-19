@@ -20,11 +20,13 @@ public class TestEngine implements IEngine {
     public static final String TP_VENDOR_CONTACT_EMAIL = "support@123it.ca";
 
     Ambasadoro ambasadoro;
-    
+
     ILTIConstants ltiConstants = new LTIConstants();
     IToolProvider toolProvider;
     Map<String, String> properties = new HashMap<String, String>();
-    JSONObject meta;
+    JSONObject tpExtraProperties;
+    JSONObject tpRequiredParameters;
+    JSONObject tcOverride;
 
     public TestEngine(Ambasadoro ambasadoro, Map<String, String> params, String endpoint) throws Exception {
         //System.out.println("Creating ltiEngine for [" + code + "]");
@@ -32,10 +34,13 @@ public class TestEngine implements IEngine {
 
         try {
             toolProvider = new ToolProvider(params);
-            meta = new JSONObject(ambasadoro.getMeta());
-            //meta = new JSONObject("{'meta': { 'properties': { 'toolEndPoint': 'http://localhost/', 'toolKey': 'xxx', 'toolSecret': 'yyy'} } }");
-            //System.out.println(meta.get("meta"));
-            
+            tpExtraProperties = new JSONObject(ambasadoro.getTpExtraProperties());
+            tpRequiredParameters = new JSONObject(ambasadoro.getTpRequiredParameters());
+            tcOverride = new JSONObject(ambasadoro.getTcOverride());
+            //meta = new JSONObject("{'meta': { 'tp': { 'properties': { 'toolEndPoint': {'value': '', 'type': 'text'}, 'toolKey': {'value': '', 'type': 'text'}, 'toolSecret': {'value': '', 'type': 'text'}, 'emailAllowed': {'value': '', 'type': 'checkbox'} } } } }");
+            //meta = new JSONObject("{'meta': { 'tp': { 'properties': { 'toolEndPoint': {'value': '', 'type': 'text'}, 'toolKey': {'value': '', 'type': 'text'}, 'toolSecret': {'value': '', 'type': 'text'}, 'emailAllowed': {'value': '', 'type': 'checkbox'} } } } }");
+            //System.out.println(meta.get("tp"));
+
             if( !toolProvider.hasValidSignature(endpoint, ambasadoro.getLtiSecret()) )
                 throw new Exception("OAuth signature is NOT valid");
             else
@@ -44,13 +49,13 @@ public class TestEngine implements IEngine {
             throw e;
         }
     }
-    
+
     public String getToolTitle(){
-        return ambasadoro.getToolTitle();
+        return ambasadoro.getTpTitle();
     }
 
     public String getToolDescription(){
-        return ambasadoro.getToolDescription();
+        return ambasadoro.getTpDescription();
     }
 
     public String getToolVendorCode(){

@@ -43,7 +43,10 @@ class LtiController {
             params.remove("action")
             params.remove("controller")
             IEngine engine = ltiEngineFactory.createEngine(ambasadoro, params, endpoint)
-            log.debug "  - Initialized ltiEngine. code [" + engine.getCode() + "]"
+            log.debug "  - Initialized ltiEngine. code [" + engine.getToolVendorCode() + "]"
+
+
+
         } catch(Exception e) {
             log.debug "  - Exception: " + e.getMessage()
         }
@@ -79,14 +82,14 @@ class LtiController {
         '                             http://www.imsglobal.org/xsd/imsbasiclti_v1p0 http://www.imsglobal.org/xsd/lti/ltiv1p0/imsbasiclti_v1p0.xsd' +
         '                             http://www.imsglobal.org/xsd/imslticm_v1p0 http://www.imsglobal.org/xsd/lti/ltiv1p0/imslticm_v1p0.xsd' +
         '                             http://www.imsglobal.org/xsd/imslticp_v1p0 http://www.imsglobal.org/xsd/lti/ltiv1p0/imslticp_v1p0.xsd">' +
-        '    <blti:title>' + ambasadoro.getToolTitle() + '</blti:title>' +
-        '    <blti:description>' + ambasadoro.getToolDescription() + '</blti:description>' +
+        '    <blti:title>' + ambasadoro.getTpTitle() + '</blti:title>' +
+        '    <blti:description>' + ambasadoro.getTpDescription() + '</blti:description>' +
         '    <blti:launch_url>' + ambasadoroService.retrieveEndpoint() + '/lti/tool/' + ambasadoro.getId() + '</blti:launch_url>' +
         '    <blti:secure_launch_url>' + ambasadoroService.retrieveEndpoint('https') + '/lti/tool/' + ambasadoro.getId() + '</blti:secure_launch_url>' +
         '    <blti:icon>' + ambasadoroService.retrieveEndpoint() + '/images/' + ambasadoro.getId() + '/favicon.ico</blti:icon>' +
         '    <blti:secure_icon>' + ambasadoroService.retrieveEndpoint('https') + '/images/' + ambasadoro.getId() + '/favicon.ico</blti:secure_icon>' +
         '    <blti:vendor>' +
-        '        <lticp:code>' + ambasadoro.getToolVendorCode() + '</lticp:code>' +
+        '        <lticp:code>' + ambasadoro.getTpVendorCode() + '</lticp:code>' +
         '        <lticp:name>' + engineClass.TP_VENDOR_NAME + '</lticp:name>' +
         '        <lticp:description>' + engineClass.TP_VENDOR_DESCRIPTION + '</lticp:description>' +
         '        <lticp:url>' + engineClass.TP_VENDOR_URL + '</lticp:url>' +

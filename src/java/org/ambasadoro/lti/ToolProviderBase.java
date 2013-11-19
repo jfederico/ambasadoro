@@ -18,11 +18,9 @@ public class ToolProviderBase implements IToolProvider {
     protected String oauth_version;
     protected String oauth_timestamp;
     
-    public ToolProviderBase(){
-        
-    }
+    public ToolProviderBase() {}
     
-    public ToolProviderBase(Map<String, String> params) throws Exception{
+    public ToolProviderBase(Map<String, String> params) throws Exception {
         System.out.println("ToolProviderBase initializad");
         if( params.containsKey(OAuth.OAUTH_CONSUMER_KEY)) oauth_consumer_key = params.get(OAuth.OAUTH_CONSUMER_KEY); else throw new Exception("Parameter [" + OAuth.OAUTH_CONSUMER_KEY + "] not included");
         if( params.containsKey(OAuth.OAUTH_SIGNATURE)) oauth_signature = params.get(OAuth.OAUTH_SIGNATURE); else throw new Exception("Parameter [" + OAuth.OAUTH_SIGNATURE + "] not included");
