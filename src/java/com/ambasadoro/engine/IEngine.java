@@ -1,7 +1,6 @@
 package com.ambasadoro.engine;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 public interface IEngine {
     ///Configuration
@@ -16,8 +15,8 @@ public interface IEngine {
     public String getToolTitle();
     public String getToolDescription();
     public String getToolVendorCode();
-    public JSONObject getJSONProperties();
+    public JSONArray getJSONProperties();
     public JSONArray getJSONRequiredParameters();
-    public JSONObject getJSONOverride();
+    public JSONArray getJSONOverride();
 
 }

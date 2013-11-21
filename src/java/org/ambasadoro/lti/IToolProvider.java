@@ -6,5 +6,5 @@ public interface IToolProvider {
 
     public boolean hasValidSignature(String url, String sharedSecret) throws Exception;
     public boolean hasRequiredParameters(JSONArray requiredParameters) throws Exception;
-
+    public void overrideParameters(JSONArray overrides) throws Exception;
 }

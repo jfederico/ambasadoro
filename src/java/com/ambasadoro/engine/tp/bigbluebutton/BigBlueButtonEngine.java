@@ -45,15 +45,15 @@ public class BigBlueButtonEngine implements IEngine{
         return TP_VENDOR_CODE;
     }
 
-    public JSONObject getJSONProperties(){
-        return tpMeta.getJSONObject("properties");
+    public JSONArray getJSONProperties(){
+        return tpMeta.getJSONArray("properties");
     }
 
     public JSONArray getJSONRequiredParameters(){
         return tpMeta.getJSONArray("requiredParameters");
     }
 
-    public JSONObject getJSONOverride(){
-        return tcMeta.getJSONObject("override");
+    public JSONArray getJSONOverride(){
+        return tcMeta.getJSONArray("override");
     }
 }

@@ -60,8 +60,11 @@ public class ToolProviderBase implements IToolProvider {
         else return response;
     }
 
-    public Properties sanitizePrametersForBaseString() {
+    public void overrideParameters(JSONArray overrides) throws Exception {
+        
+    }
 
+    public Properties sanitizePrametersForBaseString() {
         Properties reqProp = new Properties();
         for (String key : params.keySet()) {
             if (key.equals("oauth_signature") ) {

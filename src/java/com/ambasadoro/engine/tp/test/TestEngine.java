@@ -43,8 +43,8 @@ public class TestEngine implements IEngine {
                 throw new Exception("OAuth signature is NOT valid");
             else
                 System.out.println("OAuth signature is valid");
-            
-            System.out.println(getJSONRequiredParameters());
+
+            toolProvider.overrideParameters(getJSONOverride());
             if( !toolProvider.hasRequiredParameters(getJSONRequiredParameters()) )
                 throw new Exception("Missing required parameters");
             else
@@ -67,15 +67,15 @@ public class TestEngine implements IEngine {
         return TP_VENDOR_CODE;
     }
 
-    public JSONObject getJSONProperties(){
-        return tpMeta.getJSONObject("properties");
+    public JSONArray getJSONProperties(){
+        return tpMeta.getJSONArray("properties");
     }
 
     public JSONArray getJSONRequiredParameters(){
         return tpMeta.getJSONArray("requiredParameters");
     }
 
-    public JSONObject getJSONOverride(){
-        return tcMeta.getJSONObject("override");
+    public JSONArray getJSONOverride(){
+        return tcMeta.getJSONArray("overrides");
     }
 }
