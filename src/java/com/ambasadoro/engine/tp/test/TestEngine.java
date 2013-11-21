@@ -10,6 +10,7 @@ import com.ambasadoro.engine.VendorCodes;
 import org.ambasadoro.lti.ILTIConstants;
 import org.ambasadoro.lti.IToolProvider;
 import org.ambasadoro.lti.v1_0.*;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class TestEngine implements IEngine {
@@ -24,9 +25,8 @@ public class TestEngine implements IEngine {
     ILTIConstants ltiConstants = new LTIConstants();
     IToolProvider toolProvider;
     Map<String, String> properties = new HashMap<String, String>();
-    JSONObject tpExtraProperties;
-    JSONObject tpRequiredParameters;
-    JSONObject tcOverride;
+    JSONObject tpMeta;
+    JSONObject tcMeta;
 
     public TestEngine(Ambasadoro ambasadoro, Map<String, String> params, String endpoint) throws Exception {
         //System.out.println("Creating ltiEngine for [" + code + "]");
@@ -34,17 +34,22 @@ public class TestEngine implements IEngine {
 
         try {
             toolProvider = new ToolProvider(params);
-            tpExtraProperties = new JSONObject(ambasadoro.getTpExtraProperties());
-            tpRequiredParameters = new JSONObject(ambasadoro.getTpRequiredParameters());
-            tcOverride = new JSONObject(ambasadoro.getTcOverride());
-            //meta = new JSONObject("{'meta': { 'tp': { 'properties': { 'toolEndPoint': {'value': '', 'type': 'text'}, 'toolKey': {'value': '', 'type': 'text'}, 'toolSecret': {'value': '', 'type': 'text'}, 'emailAllowed': {'value': '', 'type': 'checkbox'} } } } }");
-            //meta = new JSONObject("{'meta': { 'tp': { 'properties': { 'toolEndPoint': {'value': '', 'type': 'text'}, 'toolKey': {'value': '', 'type': 'text'}, 'toolSecret': {'value': '', 'type': 'text'}, 'emailAllowed': {'value': '', 'type': 'checkbox'} } } } }");
-            //System.out.println(meta.get("tp"));
+            tpMeta = new JSONObject(ambasadoro.getTpMeta());
+            System.out.println(tpMeta);
+            tcMeta = new JSONObject(ambasadoro.getTcMeta());
+            System.out.println(tcMeta);
 
             if( !toolProvider.hasValidSignature(endpoint, ambasadoro.getLtiSecret()) )
                 throw new Exception("OAuth signature is NOT valid");
             else
                 System.out.println("OAuth signature is valid");
+            
+            System.out.println(getJSONRequiredParameters());
+            if( !toolProvider.hasRequiredParameters(getJSONRequiredParameters()) )
+                throw new Exception("Missing required parameters");
+            else
+                System.out.println("All required parameters are included");
+            
         } catch( Exception e) {
             throw e;
         }
@@ -62,8 +67,15 @@ public class TestEngine implements IEngine {
         return TP_VENDOR_CODE;
     }
 
-    public boolean hasAllRequiredParams(){
-        return false;
+    public JSONObject getJSONProperties(){
+        return tpMeta.getJSONObject("properties");
     }
-    
+
+    public JSONArray getJSONRequiredParameters(){
+        return tpMeta.getJSONArray("requiredParameters");
+    }
+
+    public JSONObject getJSONOverride(){
+        return tcMeta.getJSONObject("override");
+    }
 }

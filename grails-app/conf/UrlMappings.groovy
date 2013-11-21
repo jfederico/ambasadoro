@@ -9,7 +9,7 @@ class UrlMappings {
             action = [GET:"toolUi", POST:"tool"]
         }
 
-        "/$controller/*.xml"{
+        "/$controller/tool.xml?/$id?"{
             action = 'toolCartridge'
         }
 

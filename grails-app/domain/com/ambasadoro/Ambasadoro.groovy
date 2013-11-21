@@ -13,14 +13,13 @@ class Ambasadoro {
     String  tpEndpoint
     String  tpKey
     String  tpSecret
-    String  tpExtraProperties   = "{}"
-    String  tpRequiredParameters= "{}"
-    String  tcVendorCode        = "{}"
-    String  tcOverride
+    String  tpMeta              = "{'properties': {}, 'requiredParameters': {}}"
+    String  tcVendorCode
+    String  tcMeta              = "{'override': {}}"
 
     static constraints = {
     }
     
-    String toString() {"[${this.ltiKey}:${this.ltiSecret}]${this.tpTitle}:${this.tpDescription}:${this.tpVendorCode}:${this.tcVendorCode}:${this.tpExtraProperties}:${this.tpRequiredParameters}:${this.tcOverride}"}
+    String toString() {"[${this.ltiKey}:${this.ltiSecret}]${this.tpTitle}:${this.tpDescription}:${this.tpVendorCode}:${this.tcVendorCode}:${this.tpMeta}:${this.tcMeta}"}
     
 }

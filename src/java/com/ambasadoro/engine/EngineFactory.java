@@ -18,7 +18,7 @@ public class EngineFactory implements IEngineFactory {
 
     public IEngine createEngine(Ambasadoro ambasadoro, Map<String, String> params, String endpoint) throws Exception {
         IEngine toolProviderEngine = null;
-        String toolCode = ambasadoro.getToolVendorCode();
+        String toolCode = ambasadoro.getTpVendorCode();
         
         try {
             if(VendorCodes.TP_CODE_TEST.equals(toolCode) ){
@@ -41,7 +41,7 @@ public class EngineFactory implements IEngineFactory {
     
     public Object getEngineClass(Ambasadoro ambasadoro) throws Exception {
         Object engineClass = null;
-        String toolCode = ambasadoro.getToolVendorCode();
+        String toolCode = ambasadoro.getTpVendorCode();
         try {
             if(VendorCodes.TP_CODE_TEST.equals(toolCode) ){
                 engineClass = TestEngine.class;

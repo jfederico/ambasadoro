@@ -17,10 +17,9 @@ class BootStrap {
         ambasadoro.tpEndpoint = "http://localhost/"
         ambasadoro.tpKey = "xxx"
         ambasadoro.tpSecret = "yyy"
-        ambasadoro.tpExtraProperties = "{'allowEmailAuthentication': {'type': 'boolean', 'value': 'true'} }"
-        ambasadoro.tpRequiredParameters = "['resource_link_title', 'user_id', 'roles', 'lis_person_contact_email_primary', 'tool_consumer_instance_guid']"
+        ambasadoro.tpMeta = "{'properties': {'allowEmailAuthentication': {'type': 'boolean', 'value': 'true'}}, 'requiredParameters': ['resource_link_title', 'user_id', 'roles', 'lis_person_contact_email_primary', 'tool_consumer_instance_guid']}"
         ambasadoro.tcVendorCode = "moodle"
-        ambasadoro.tcOverride = "{}"
+        ambasadoro.tcMeta = "{'override': {}}"
         log.debug ambasadoro
         if ( !ambasadoro.save(flush:true) ){
             log.debug "Ambasadoro instance cound NOT be saved"

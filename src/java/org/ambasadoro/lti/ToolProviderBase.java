@@ -7,6 +7,8 @@ import net.oauth.OAuth;
 import net.oauth.OAuthMessage;
 import net.oauth.signature.HMAC_SHA1;
 
+import org.json.JSONArray;
+
 public class ToolProviderBase implements IToolProvider {
     
     protected Map<String, String> params;
@@ -44,6 +46,20 @@ public class ToolProviderBase implements IToolProvider {
         return validSignature;
     }
 
+    public boolean hasRequiredParameters(JSONArray requiredParameters) throws Exception {
+        boolean response = true;
+        String missingParams = "";
+        for (int i = 0; i < requiredParameters.length(); i++) {
+            if( !params.containsKey(requiredParameters.getString(i)) ){
+                if( missingParams.length()>0) missingParams += ", ";
+                missingParams += requiredParameters.getString(i);
+                response = false;
+            }
+        }
+        if(!response) throw new Exception("Required Parameters [" + missingParams + "] not included");
+        else return response;
+    }
+
     public Properties sanitizePrametersForBaseString() {
 
         Properties reqProp = new Properties();
@@ -57,5 +73,9 @@ public class ToolProviderBase implements IToolProvider {
         }
 
         return reqProp;
+    }
+
+    public Map<String, String> getParams(){
+        return params;
     }
 }
