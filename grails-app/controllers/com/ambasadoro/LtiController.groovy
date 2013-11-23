@@ -50,6 +50,25 @@ class LtiController {
             IToolProvider toolProvider = engine.getToolProvider()
             ambasadoroService.logParameters(toolProvider.getParams())
 
+            def ltiUser
+            def ltiToolConsumer = ambasadoroService.getLtiToolConsumer(ambasadoro, toolProvider.getParams(), engine.getLTIConstants())
+            if( ltiToolConsumer == null ) {
+                log.debug " - The ltiToolConsumer couldn't be generated"
+            } else if ( !ltiToolConsumer.save(flush:true) ){
+                log.debug " - The ltiToolConsumer couldn't be saved"
+            } else {
+                log.debug " - The ltiToolConsumer was saved"
+                //ltiUser = ambasadoroService.getLtiUser(ltiToolConsumer, params)
+                if(ltiUser == null){
+                    log.debug " - The ltiUser couldn't be generated"
+                } else if( !ltiUser.save(flush:true) ){
+                    log.debug " - The ltiUser couldn't be saved"
+                } else {
+                    log.debug " - The ltiUser was saved"
+                }
+            }
+
+            
             //Execute action depending of the role.
               //Admin have access to admin interface + Launching link
               //Teacher have access to one time configuration form to extra parameters, Launching form with launching link or launch directly

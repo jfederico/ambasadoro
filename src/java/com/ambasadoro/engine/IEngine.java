@@ -1,5 +1,6 @@
 package com.ambasadoro.engine;
 
+import org.ambasadoro.lti.ILTIConstants;
 import org.ambasadoro.lti.IToolProvider;
 import org.json.JSONArray;
 
@@ -12,5 +13,5 @@ public interface IEngine {
     public JSONArray getJSONRequiredParameters();
     public JSONArray getJSONOverride();
     public IToolProvider getToolProvider();
-
+    public ILTIConstants getLTIConstants();
 }

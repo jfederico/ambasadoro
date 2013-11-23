@@ -1,8 +1,5 @@
 package com.ambasadoro.engine;
 
-import java.util.Map;
-import java.util.HashMap;
-
 import com.ambasadoro.Ambasadoro;
 import com.ambasadoro.engine.IEngine;
 
@@ -18,7 +15,6 @@ public class EngineBase implements IEngine {
 
     protected ILTIConstants ltiConstants = new LTIConstants();
     protected IToolProvider toolProvider;
-    protected Map<String, String> properties = new HashMap<String, String>();
     protected JSONObject tpMeta;
     protected JSONObject tcMeta;
     
@@ -57,6 +53,14 @@ public class EngineBase implements IEngine {
 
     public JSONArray getJSONOverride(){
         return tcMeta.getJSONArray("overrides");
+    }
+
+    public Ambasadoro getAmbasadoro(){
+        return this.ambasadoro;
+    }
+
+    public ILTIConstants getLTIConstants(){
+        return this.ltiConstants;
     }
 
     public IToolProvider getToolProvider(){
