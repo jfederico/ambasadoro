@@ -13,15 +13,15 @@ class Ambasadoro {
     String  tpEndpoint
     String  tpKey
     String  tpSecret
-    String  tpMeta              = "{'properties': {}, 'requiredParameters': {}}"
+    String  tpMeta              = "{'properties': [], 'requiredParameters': [], 'extraParameters': []}"
     String  tcVendorCode
-    String  tcMeta              = "{'override': {}}"
+    String  tcMeta              = "{'overrides': []}"
 
     static hasMany = [ltiToolConsumers:LtiToolConsumer]
     static mapping = {
         ltiToolConsumers cascade: 'all'
-        tpMeta sqlType:"text"
-        tcMeta sqlType:"text"
+        tpMeta sqlType: 'text'
+        tcMeta sqlType: 'text'
     }
 
     static constraints = {

@@ -9,14 +9,14 @@ class LtiAccessLog {
     LtiLaunch ltiLaunch
     static belongsTo = [ltiLaunch : LtiLaunch]
 
-    Date tokenGenerated
+    Date authTokenGenerated
     String authToken
-    Boolean tokenAccessed = false
+    Boolean authTokenAccessed = false
     
     static constraints = {
         authToken(nullable:true)
-        tokenGenerated(nullable:true)
+        authTokenGenerated(nullable:true)
     }
     
-    String toString() {"${this.id}],tokenGeneratedOn=${this.tokenGenerated}:authToken=${this.authToken}:tokenAccessed=${this.tokenAccessed}"}
+    String toString() {"${this.id}],authTokenGenerated=${this.authTokenGenerated}:authToken=${this.authToken}:authTokenAccessed=${this.authTokenAccessed}"}
 }
