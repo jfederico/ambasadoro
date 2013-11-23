@@ -50,6 +50,10 @@ class LtiController {
             IToolProvider toolProvider = engine.getToolProvider()
             ambasadoroService.logParameters(toolProvider.getParams())
 
+            //Execute action depending of the role.
+              //Admin have access to admin interface + Launching link
+              //Teacher have access to one time configuration form to extra parameters, Launching form with launching link or launch directly
+
         } catch(Exception e) {
             log.debug "  - Exception: " + e.getMessage()
         }
