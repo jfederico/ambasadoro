@@ -17,6 +17,13 @@ class Ambasadoro {
     String  tcVendorCode
     String  tcMeta              = "{'override': {}}"
 
+    static hasMany = [ltiToolConsumers:LtiToolConsumer]
+    static mapping = {
+        ltiToolConsumers cascade: 'all'
+        tpMeta sqlType:"text"
+        tcMeta sqlType:"text"
+    }
+
     static constraints = {
     }
     

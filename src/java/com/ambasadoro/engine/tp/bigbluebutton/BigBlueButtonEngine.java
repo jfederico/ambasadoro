@@ -6,7 +6,7 @@ import com.ambasadoro.Ambasadoro;
 import com.ambasadoro.engine.EngineBase;
 import com.ambasadoro.engine.VendorCodes;
 
-import org.ambasadoro.lti.v1_0.*;
+//import org.ambasadoro.lti.v1_0.*;
 
 public class BigBlueButtonEngine extends EngineBase{
     public static final String TP_VENDOR_CODE = VendorCodes.TP_CODE_TEST;
