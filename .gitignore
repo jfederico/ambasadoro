@@ -3,3 +3,4 @@
 .settings*
 target*
 make.sh
+deploy.sh
