@@ -56,4 +56,8 @@ public class BigBlueButtonEngine implements IEngine{
     public JSONArray getJSONOverride(){
         return tcMeta.getJSONArray("override");
     }
+
+    public IToolProvider getToolProvider(){
+        return this.toolProvider;
+    }
 }

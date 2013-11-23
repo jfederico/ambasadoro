@@ -8,12 +8,14 @@ import net.oauth.OAuthMessage
 import net.oauth.signature.OAuthSignatureMethod
 import net.oauth.signature.HMAC_SHA1
 
-import com.ambasadoro.Ambasadoro;
-import com.ambasadoro.AmbasadoroService;
+import com.ambasadoro.Ambasadoro
+import com.ambasadoro.AmbasadoroService
 import com.ambasadoro.engine.EngineFactory
 import com.ambasadoro.engine.IEngine
 import com.ambasadoro.engine.IEngineFactory
-import com.ambasadoro.engine.VendorCodes;
+import com.ambasadoro.engine.VendorCodes
+
+import org.ambasadoro.lti.IToolProvider
 
 import net.oauth.OAuth;
 
@@ -44,8 +46,9 @@ class LtiController {
             params.remove("controller")
             IEngine engine = ltiEngineFactory.createEngine(ambasadoro, params, endpoint)
             log.debug "  - Initialized ltiEngine. code [" + engine.getToolVendorCode() + "]"
-
-
+            
+            IToolProvider toolProvider = engine.getToolProvider()
+            ambasadoroService.logParameters(toolProvider.getParams())
 
         } catch(Exception e) {
             log.debug "  - Exception: " + e.getMessage()

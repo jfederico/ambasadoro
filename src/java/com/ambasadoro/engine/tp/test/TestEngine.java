@@ -78,4 +78,8 @@ public class TestEngine implements IEngine {
     public JSONArray getJSONOverride(){
         return tcMeta.getJSONArray("overrides");
     }
+
+    public IToolProvider getToolProvider(){
+        return this.toolProvider;
+    }
 }

@@ -8,6 +8,7 @@ import net.oauth.OAuthMessage;
 import net.oauth.signature.HMAC_SHA1;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class ToolProviderBase implements IToolProvider {
     
@@ -61,10 +62,22 @@ public class ToolProviderBase implements IToolProvider {
     }
 
     public void overrideParameters(JSONArray overrides) throws Exception {
+        JSONObject override;
+        String source;
+        String target;
+
+        for (int i = 0; i < overrides.length(); i++) {
+            override = overrides.getJSONObject(i);
+            source = override.getString("source");
+            target = override.getString("target");
+            if( params.containsKey(target) ){
+                params.put(source, params.get(target));
+            }
+        }
         
     }
 
-    public Properties sanitizePrametersForBaseString() {
+    protected Properties sanitizePrametersForBaseString() {
         Properties reqProp = new Properties();
         for (String key : params.keySet()) {
             if (key.equals("oauth_signature") ) {
