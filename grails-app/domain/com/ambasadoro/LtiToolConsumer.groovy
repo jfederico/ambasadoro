@@ -28,5 +28,5 @@ class LtiToolConsumer {
     static constraints = {
     }
     
-    String toString() {"[${this.customer}:${this.toolConsumerInstanceGuid}]${this.toolConsumerInfoProductFamilyCode}:${this.outcomeServiceUrl}"}
+    String toString() {"[${this.ambasadoro}:${this.toolConsumerInstanceGuid}]${this.toolConsumerInfoProductFamilyCode}:${this.outcomeServiceUrl}"}
 }

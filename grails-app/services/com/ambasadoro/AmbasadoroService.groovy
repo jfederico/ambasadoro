@@ -32,8 +32,53 @@ class AmbasadoroService {
     def retrieveEndpoint(protocol) {
         return protocol + "://" + endpoint + "/ambasadoro"
     }
+    
+    def saveUser(ltiConstants, ambasadoro, params) throws Exception {
+        def ltiUser = null
+        def ltiToolConsumer = getLtiToolConsumer(ltiConstants, ambasadoro, params)
+        if( ltiToolConsumer == null ) {
+            log.debug " - The ltiToolConsumer couldn't be generated"
+            throw new Exception("The ltiToolConsumer couldn't be generated")
+        } else if ( !ltiToolConsumer.save(flush:true) ){
+            log.debug " - The ltiToolConsumer couldn't be saved"
+            throw new Exception("The ltiToolConsumer couldn't be saved")
+        } else {
+            log.debug " - The ltiToolConsumer was saved"
+            ltiUser = getLtiUser(ltiConstants, ambasadoro, params, ltiToolConsumer)
+            if(ltiUser == null){
+                log.debug " - The ltiUser couldn't be generated"
+                throw new Exception("The ltiUser couldn't be generated")
+            } else if( !ltiUser.save(flush:true) ){
+                log.debug " - The ltiUser couldn't be saved"
+                throw new Exception("The ltiUser couldn't be generated")
+            } else {
+                log.debug " - The ltiUser was saved"
+            }
+        }
+        return ltiUser
+    }
 
-    def getLtiToolConsumer(ambasadoro, params, ltiConstants) {
+    def getLtiUser(ltiConstants, ambasadoro, params, ltiToolConsumer) {
+        def ltiUser = null
+
+        String userId = params.containsKey(ltiConstants.USER_ID) ? params.get(ltiConstants.USER_ID): null
+        if( userId != null ){
+            ltiUser = LtiUser.findWhere(ltiToolConsumer: ltiToolConsumer, userId: userId)
+            if( ltiUser == null ){
+                ltiUser = new LtiUser()
+                ltiUser.ltiToolConsumer = ltiToolConsumer
+                ltiUser.userId = userId
+            }
+            ltiUser.lisPersonContactEmailPrimary = params.containsKey(ltiConstants.LIS_PERSON_CONTACT_EMAIL_PRIMARY) ? params.get(ltiConstants.LIS_PERSON_CONTACT_EMAIL_PRIMARY): ""
+            ltiUser.lisPersonNameGiven = params.containsKey(ltiConstants.LIS_PERSON_NAME_GIVEN)? params.get(ltiConstants.LIS_PERSON_NAME_GIVEN): ""
+            ltiUser.lisPersonNameFamily = params.containsKey(ltiConstants.LIS_PERSON_NAME_FAMILY)? params.get(ltiConstants.LIS_PERSON_NAME_FAMILY): ""
+            ltiUser.lisPersonNameFull = params.containsKey(ltiConstants.LIS_PERSON_NAME_FULL)? params.get(ltiConstants.LIS_PERSON_NAME_FULL): ""
+        }
+
+        return ltiUser
+    }
+    
+    def getLtiToolConsumer(ltiConstants, ambasadoro, params) {
         def ltiToolConsumer = null
         
         def toolConsumerInstanceGuid =  params.containsKey(ltiConstants.TOOL_CONSUMER_INSTANCE_GUID)? params.get(ltiConstants.TOOL_CONSUMER_INSTANCE_GUID): null

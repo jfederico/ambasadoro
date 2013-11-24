@@ -1,5 +1,7 @@
 package com.ambasadoro.engine;
 
+import java.util.Map;
+
 import com.ambasadoro.Ambasadoro;
 import com.ambasadoro.engine.IEngine;
 
@@ -18,13 +20,26 @@ public class EngineBase implements IEngine {
     protected JSONObject tpMeta;
     protected JSONObject tcMeta;
     
-    public EngineBase(Ambasadoro ambasadoro) throws Exception {
+    public EngineBase(Ambasadoro ambasadoro, Map<String, String> params, String endpoint) throws Exception {
         this.ambasadoro = ambasadoro;
         try {
             this.tpMeta = new JSONObject(ambasadoro.getTpMeta());
             System.out.println(this.tpMeta);
             this.tcMeta = new JSONObject(ambasadoro.getTcMeta());
             System.out.println(this.tcMeta);
+
+            this.toolProvider = new ToolProvider(params);
+            if( !this.toolProvider.hasValidSignature(endpoint, ambasadoro.getLtiSecret()) )
+                throw new Exception("OAuth signature is NOT valid");
+            else
+                System.out.println("OAuth signature is valid");
+
+            this.toolProvider.overrideParameters(getJSONOverride());
+            if( !this.toolProvider.hasRequiredParameters(getJSONRequiredParameters()) )
+                throw new Exception("Missing required parameters");
+            else
+                System.out.println("All required parameters are included");
+
         } catch( Exception e) {
             throw e;
         }

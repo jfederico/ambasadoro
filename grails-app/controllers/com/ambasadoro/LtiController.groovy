@@ -48,25 +48,11 @@ class LtiController {
             log.debug "  - Initialized ltiEngine. code [" + engine.getToolVendorCode() + "]"
             
             IToolProvider toolProvider = engine.getToolProvider()
+            log.debug "Parameters after override"
             ambasadoroService.logParameters(toolProvider.getParams())
-
-            def ltiUser
-            def ltiToolConsumer = ambasadoroService.getLtiToolConsumer(ambasadoro, toolProvider.getParams(), engine.getLTIConstants())
-            if( ltiToolConsumer == null ) {
-                log.debug " - The ltiToolConsumer couldn't be generated"
-            } else if ( !ltiToolConsumer.save(flush:true) ){
-                log.debug " - The ltiToolConsumer couldn't be saved"
-            } else {
-                log.debug " - The ltiToolConsumer was saved"
-                //ltiUser = ambasadoroService.getLtiUser(ltiToolConsumer, params)
-                if(ltiUser == null){
-                    log.debug " - The ltiUser couldn't be generated"
-                } else if( !ltiUser.save(flush:true) ){
-                    log.debug " - The ltiUser couldn't be saved"
-                } else {
-                    log.debug " - The ltiUser was saved"
-                }
-            }
+            
+            def ltiUser = ambasadoroService.saveUser(engine.getLTIConstants(), ambasadoro, toolProvider.getParams())
+            log.debug ltiUser
 
             
             //Execute action depending of the role.
