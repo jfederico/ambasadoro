@@ -33,7 +33,7 @@ public class ToolProviderBase implements IToolProvider {
     }
 
     public boolean hasValidSignature(String url, String secret) throws AmbasadoroException, Exception {
-        boolean validSignature = false;
+        boolean response = false;
         System.out.println("Checking if the OAuth signature is valid. url=" + url + ", secret=" + secret );
         Object postProp = sanitizePrametersForBaseString();
         
@@ -43,10 +43,10 @@ public class ToolProviderBase implements IToolProvider {
         String baseString = HMAC_SHA1.getBaseString(oam);
         System.out.println("Base Message String = [ " + baseString + " ]\n");
         if( hmac.isValid(oauth_signature, baseString) )
-            validSignature = true;
+            response = true;
         System.out.println("Calculated: " + hmac.getSignature(baseString) + " Received: " + oauth_signature);
 
-        return validSignature;
+        return response;
     }
 
     public boolean hasRequiredParameters(JSONArray requiredParameters) throws AmbasadoroException, Exception {

@@ -18,6 +18,8 @@ class LtiResourceLink {
     static hasMany = [ltiLaunches:LtiLaunch]
     static mapping = {
         ltiLaunches cascade: 'all'
+        resourceLinkDescription sqlType: 'text'
+        resourceLinkExtra sqlType: 'text'
     }
 
     static constraints = {

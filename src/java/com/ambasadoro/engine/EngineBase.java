@@ -67,6 +67,10 @@ public class EngineBase implements IEngine {
         return tpMeta.getJSONArray("requiredParameters");
     }
 
+    public JSONArray getJSONExtraParameters(){
+        return tpMeta.getJSONArray("extraParameters");
+    }
+
     public JSONArray getJSONOverride(){
         return tcMeta.getJSONArray("overrides");
     }
@@ -81,5 +85,9 @@ public class EngineBase implements IEngine {
 
     public IToolProvider getToolProvider(){
         return this.toolProvider;
+    }
+    
+    public Map<String, String> getParams(){
+        return this.toolProvider.getParams();
     }
 }

@@ -16,6 +16,7 @@ class LtiUser {
     String lisPersonNameFamily = ""
     String lisPersonNameFull = ""
     String matchingKey = ""
+    String matchingValue = ""
     Boolean matchingStatus = false
 
     static constraints = {

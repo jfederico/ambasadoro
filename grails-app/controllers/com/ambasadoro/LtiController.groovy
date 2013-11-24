@@ -45,19 +45,51 @@ class LtiController {
             IEngine engine = ltiEngineFactory.createEngine(ambasadoro, params, endpoint)
             log.debug "  - Initialized ltiEngine. code [" + engine.getToolVendorCode() + "]"
             
-            IToolProvider toolProvider = engine.getToolProvider()
-            log.debug "  - Parameters after override"
-            ambasadoroService.logParameters(toolProvider.getParams())
+            //log.debug "  - Parameters after override"
+            //ambasadoroService.logParameters(engine.getParams())
             
-            
-            
-            
-            
-            //def ltiUser = ambasadoroService.saveUser(engine.getLTIConstants(), ambasadoro, toolProvider.getParams())
+            def ltiResourceLink = ambasadoroService.saveLtiLaunch(engine.getLTIConstants(), ambasadoro, engine.getParams())
+            log.debug ltiResourceLink
+
+            //def ltiUser = ambasadoroService.saveLtiUser(engine.getLTIConstants(), ambasadoro, engine.getParams())
             //log.debug ltiUser
             
-            //def ltiLaunch = ambasadoroService.saveLaunch(engine.getLTIConstants(), ambasadoro, toolProvider.getParams())
+            //def ltiLaunch = ambasadoroService.saveLtiLaunch(engine.getLTIConstants(), ambasadoro, engine.getParams()))
             //log.debug ltiLaunch
+
+            
+            //Process the extra parameters:
+            def extraParameters = engine.getJSONExtraParameters() 
+            if(  extraParameters.length() > 0 ) {
+                log.debug " - Extra parameters: " + extraParameters.toString()
+                def allExtraParametersSet = true
+                def extraParameter
+                for( int i=0; i < extraParameters.length(); i++ ){
+                    extraParameter = extraParameters.getJSONObject(i);
+                    def extraParameterName = extraParameter.getString("name");
+                    //def extraParameterType = extraParameter.getString("type");
+                    //def extraParameterDefaultValue = extraParameter.getString("defaultValue");
+                    //Verify if "extraParameterName" is set for the corresponding LtiResourceLink
+                    if( false ) {
+                        allExtraParametersSet = false;
+                        break;
+                    } else {
+                        //engine.putParameter(extraParameterName, ltiLaunch.getExtraParameter(extraParameterName) )
+                    }
+                }
+                session["params"] = params
+                //if configured, add them and continue with the launch
+                //else
+                //  if admin/instructor provide UI for configuration
+                //  else set error message
+            } else {
+                log.debug " - No extra parameters"
+            }
+            //Go for the launch
+            //def launchingURL = engine.getLaunchingURL()
+            //redirect(url:launchingURL)
+                
+            
             
             
             //Execute action depending of the role.
