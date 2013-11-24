@@ -26,7 +26,7 @@ public class EngineFactory implements IEngineFactory {
             } else if(VendorCodes.TP_CODE_BIGBLUEBUTTON.equals(toolCode) ){
                 toolProviderEngine = new BigBlueButtonEngine(ambasadoro, params, endpoint);
             } else if(VendorCodes.TP_CODE_CHALKANDWIRE.equals(toolCode) ){
-                //toolProviderEngine = new CWEPortfolioEngine(ambasadoro, params, endpoint);
+                //toolProviderEngine = new ChalkAndWireEngine(ambasadoro, params, endpoint);
             } else if(VendorCodes.TP_CODE_LIMESURVEY.equals(toolCode) ){
                 //toolProviderEngine = new LimeSurveyEngine(ambasadoro, params, endpoint);
             } else if(VendorCodes.TP_CODE_YOUTUBE.equals(toolCode) ){

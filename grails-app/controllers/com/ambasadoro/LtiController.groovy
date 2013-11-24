@@ -14,6 +14,7 @@ import com.ambasadoro.engine.EngineFactory
 import com.ambasadoro.engine.IEngine
 import com.ambasadoro.engine.IEngineFactory
 import com.ambasadoro.engine.VendorCodes
+import com.ambasadoro.exceptions.AmbasadoroException
 
 import org.ambasadoro.lti.IToolProvider
 
@@ -40,27 +41,35 @@ class LtiController {
             String endpoint = ambasadoroService.retrieveEndpoint(request.isSecure()?"https":"http") + "/lti/tool/" + params.get("id")
 
             log.debug "  - Initializing ltiEngine"
-            //sanitizePrametersForBaseString (remove grails params)
-            params.remove("id")
-            params.remove("action")
-            params.remove("controller")
+            ambasadoroService.sanitizePrameters(params)
             IEngine engine = ltiEngineFactory.createEngine(ambasadoro, params, endpoint)
             log.debug "  - Initialized ltiEngine. code [" + engine.getToolVendorCode() + "]"
             
             IToolProvider toolProvider = engine.getToolProvider()
-            log.debug "Parameters after override"
+            log.debug "  - Parameters after override"
             ambasadoroService.logParameters(toolProvider.getParams())
             
-            def ltiUser = ambasadoroService.saveUser(engine.getLTIConstants(), ambasadoro, toolProvider.getParams())
-            log.debug ltiUser
-
+            
+            
+            
+            
+            //def ltiUser = ambasadoroService.saveUser(engine.getLTIConstants(), ambasadoro, toolProvider.getParams())
+            //log.debug ltiUser
+            
+            //def ltiLaunch = ambasadoroService.saveLaunch(engine.getLTIConstants(), ambasadoro, toolProvider.getParams())
+            //log.debug ltiLaunch
+            
             
             //Execute action depending of the role.
               //Admin have access to admin interface + Launching link
               //Teacher have access to one time configuration form to extra parameters, Launching form with launching link or launch directly
 
+        } catch(AmbasadoroException e) {
+            log.debug "  - AmbasadoroException: " + e.getErrorCode() + ":" + e.getLocalizedMessage()
+            render(view: "error", model: ['resultMessageKey': e.getErrorCode(), 'resultMessage': e.getLocalizedMessage()])
         } catch(Exception e) {
-            log.debug "  - Exception: " + e.getMessage()
+            log.debug "  - Exception: " + e.getLocalizedMessage()
+            render(view: "error", model: ['resultMessageKey': 'GeneralError', 'resultMessage': e.getLocalizedMessage()])
         }
 	}
 	

@@ -1,5 +1,7 @@
 package com.ambasadoro
 
+import com.ambasadoro.exceptions.AmbasadoroException
+
 import net.oauth.OAuth;
 
 class AmbasadoroService {
@@ -17,9 +19,9 @@ class AmbasadoroService {
             def id = params.get("id")
             ambasadoro = Ambasadoro.findById(id)
             if( ambasadoro == null)
-                throw new Exception("There is no instance for id " + "[" + id + "].")
+                throw new AmbasadoroException("There is no instance for id " + "[" + id + "].", "AmbasadoroError")
         } else {
-            throw new Exception("Parameter " + "[" + OAuth.OAUTH_CONSUMER_KEY + "] not included.")
+            throw new AmbasadoroException("Parameter [id] not included.", "AmbasadoroError")
         }
         return ambasadoro
 
@@ -33,24 +35,28 @@ class AmbasadoroService {
         return protocol + "://" + endpoint + "/ambasadoro"
     }
     
-    def saveUser(ltiConstants, ambasadoro, params) throws Exception {
+    def saveLaunch(ltiConstants, ambasadoro, params) throws AmbasadoroException, Exception {
+        
+    }
+    
+    def saveUser(ltiConstants, ambasadoro, params) throws AmbasadoroException, Exception {
         def ltiUser = null
         def ltiToolConsumer = getLtiToolConsumer(ltiConstants, ambasadoro, params)
         if( ltiToolConsumer == null ) {
             log.debug " - The ltiToolConsumer couldn't be generated"
-            throw new Exception("The ltiToolConsumer couldn't be generated")
+            throw new AmbasadoroException("The ltiToolConsumer couldn't be generated", "AmbasadoroError")
         } else if ( !ltiToolConsumer.save(flush:true) ){
             log.debug " - The ltiToolConsumer couldn't be saved"
-            throw new Exception("The ltiToolConsumer couldn't be saved")
+            throw new AmbasadoroException("The ltiToolConsumer couldn't be saved", "AmbasadoroError")
         } else {
             log.debug " - The ltiToolConsumer was saved"
             ltiUser = getLtiUser(ltiConstants, ambasadoro, params, ltiToolConsumer)
             if(ltiUser == null){
                 log.debug " - The ltiUser couldn't be generated"
-                throw new Exception("The ltiUser couldn't be generated")
+                throw new AmbasadoroException("The ltiUser couldn't be generated", "AmbasadoroError")
             } else if( !ltiUser.save(flush:true) ){
                 log.debug " - The ltiUser couldn't be saved"
-                throw new Exception("The ltiUser couldn't be generated")
+                throw new AmbasadoroException("The ltiUser couldn't be generated", "AmbasadoroError")
             } else {
                 log.debug " - The ltiUser was saved"
             }
@@ -99,5 +105,11 @@ class AmbasadoroService {
         
         return ltiToolConsumer
     }
-
+    
+    def sanitizePrameters(params){
+        // Remove extra parameters added by grails
+        params.remove("id")
+        params.remove("action")
+        params.remove("controller")
+    }
 }

@@ -7,7 +7,7 @@
 </head>
 <body>
   <div class="body">
-  <g:if test="${ (resultMessageKey == 'InvalidEPortfolioUserId')}">
+  <g:if test="${ (resultMessageKey == '')}">
   ${resultMessage}
   </g:if>
   <g:else>

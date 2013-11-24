@@ -1,5 +1,7 @@
 package org.ambasadoro.lti;
 
+import com.ambasadoro.exceptions.AmbasadoroException;
+
 import java.util.Map;
 import java.util.Properties;
 
@@ -23,14 +25,14 @@ public class ToolProviderBase implements IToolProvider {
     
     public ToolProviderBase() {}
     
-    public ToolProviderBase(Map<String, String> params) throws Exception {
+    public ToolProviderBase(Map<String, String> params) throws AmbasadoroException, Exception {
         System.out.println("ToolProviderBase initializad");
-        if( params.containsKey(OAuth.OAUTH_CONSUMER_KEY)) oauth_consumer_key = params.get(OAuth.OAUTH_CONSUMER_KEY); else throw new Exception("Parameter [" + OAuth.OAUTH_CONSUMER_KEY + "] not included");
-        if( params.containsKey(OAuth.OAUTH_SIGNATURE)) oauth_signature = params.get(OAuth.OAUTH_SIGNATURE); else throw new Exception("Parameter [" + OAuth.OAUTH_SIGNATURE + "] not included");
+        if( params.containsKey(OAuth.OAUTH_CONSUMER_KEY)) oauth_consumer_key = params.get(OAuth.OAUTH_CONSUMER_KEY); else throw new AmbasadoroException("Parameter [" + OAuth.OAUTH_CONSUMER_KEY + "] not included", "OAuthError");
+        if( params.containsKey(OAuth.OAUTH_SIGNATURE)) oauth_signature = params.get(OAuth.OAUTH_SIGNATURE); else throw new AmbasadoroException("Parameter [" + OAuth.OAUTH_SIGNATURE + "] not included", "OAuthError");
         this.params = params;
     }
 
-    public boolean hasValidSignature(String url, String secret) throws Exception {
+    public boolean hasValidSignature(String url, String secret) throws AmbasadoroException, Exception {
         boolean validSignature = false;
         System.out.println("Checking if the OAuth signature is valid. url=" + url + ", secret=" + secret );
         Object postProp = sanitizePrametersForBaseString();
@@ -47,7 +49,7 @@ public class ToolProviderBase implements IToolProvider {
         return validSignature;
     }
 
-    public boolean hasRequiredParameters(JSONArray requiredParameters) throws Exception {
+    public boolean hasRequiredParameters(JSONArray requiredParameters) throws AmbasadoroException, Exception {
         boolean response = true;
         String missingParams = "";
         for (int i = 0; i < requiredParameters.length(); i++) {
@@ -57,7 +59,7 @@ public class ToolProviderBase implements IToolProvider {
                 response = false;
             }
         }
-        if(!response) throw new Exception("Required Parameters [" + missingParams + "] not included");
+        if(!response) throw new AmbasadoroException("Required Parameters [" + missingParams + "] not included", "ToolProviderError");
         else return response;
     }
 
