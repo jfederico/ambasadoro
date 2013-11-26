@@ -17,6 +17,7 @@ import com.ambasadoro.engine.VendorCodes
 import com.ambasadoro.exceptions.AmbasadoroException
 
 import org.ambasadoro.lti.IToolProvider
+import org.ambasadoro.lti.Roles
 
 import net.oauth.OAuth;
 
@@ -49,60 +50,24 @@ class LtiController {
             ambasadoroService.logParameters(engine.getParameters())
             
             LtiLaunch ltiLaunch = ambasadoroService.saveLtiLaunch(engine.getLTIConstants(), ambasadoro, engine.getParameters())
-
-            //def ltiUser = ambasadoroService.saveLtiUser(engine.getLTIConstants(), ambasadoro, engine.getParameters())
-            //log.debug ltiUser
             
-            //def ltiLaunch = ambasadoroService.saveLtiLaunch(engine.getLTIConstants(), ambasadoro, engine.getParameters()))
-            //log.debug ltiLaunch
-
             
-            ////Process the extra parameters:
-            def extraParameters = engine.getJSONExtraParameters() 
-            if(  extraParameters.length() > 0 ) {
-                log.debug " - Extra parameters: " + extraParameters.toString()
-                def allExtraParameterSet = true
-                for( int i=0; i < extraParameters.length(); i++ ){
-                    def extraParameter = extraParameters.getJSONObject(i)
-                    def extraParameterName = extraParameter.getString("name");
-                    log.debug "   - extraParameterName = " + extraParameterName
-                    //def extraParameterType = extraParameter.getString("type");
-                    //def extraParameterDefaultValue = extraParameter.getString("defaultValue");
-                    ////Verify if "extraParameterName" is set for the corresponding LtiResourceLink
-                    LtiResourceLink ltiResourceLink = ltiLaunch.getLtiResourceLink()
-                    log.debug "   - " + ltiResourceLink
-                    def extraParameterValue = ltiResourceLink.getExtraParameterValue(extraParameterName) 
-                    log.debug "   - extraParameterValue = " + extraParameterValue
-                    if( !extraParameterValue ) {
-                        allExtraParameterSet = false;
-                        break;
-                    } else {
-                        log.debug "   - adding the parameter"
-                        engine.putParameter("extra_" + extraParameterName, extraParameterValue )
-                    }
+            if( !ambasadoroService.hasAllExtraParameterSet(engine, ltiLaunch) ){
+                if( !Roles.isLearner(engine.getParameter("roles")) ) {
+                    ///Present interface for setting up extraParameters   
+                    log.debug "<<<< Present interface for setting up extraParameters >>>>"
+                } else {
+                    ///Present error message telling learners that extraParameters are not set yet
+                    log.debug "<<<< Present error message telling learners that extraParameters are not set yet >>>>"
                 }
-                log.debug "  - Parameters after adding extra"
-                ambasadoroService.logParameters(engine.getParameters())
-                //session["params"] = engine.getParameters()
-                //if configured, add them and continue with the launch
-                //else
-                //  if admin/instructor provide UI for configuration
-                //  else set error message
             } else {
-                log.debug " - No extra parameters"
+                ///Go for the launch
+                log.debug "<<<< Go for the launch >>>>"
+                //def launchingURL = engine.getLaunchingURL()
+                //redirect(url:launchingURL)
             }
 
-            //Go for the launch
-            //def launchingURL = engine.getLaunchingURL()
-            //redirect(url:launchingURL)
                 
-            
-            
-            
-            //Execute action depending of the role.
-              //Admin have access to admin interface + Launching link
-              //Teacher have access to one time configuration form to extra parameters, Launching form with launching link or launch directly
-
         } catch(AmbasadoroException e) {
             log.debug "  - AmbasadoroException: " + e.getErrorCode() + ":" + e.getLocalizedMessage()
             render(view: "error", model: ['resultMessageKey': e.getErrorCode(), 'resultMessage': e.getLocalizedMessage()])

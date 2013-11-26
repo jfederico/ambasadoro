@@ -1,5 +1,6 @@
 package com.ambasadoro
 
+import com.ambasadoro.engine.IEngine
 import com.ambasadoro.exceptions.AmbasadoroException
 import org.ambasadoro.lti.Roles
 
@@ -228,5 +229,41 @@ class AmbasadoroService {
         params.remove("id")
         params.remove("action")
         params.remove("controller")
+    }
+
+    def hasAllExtraParameterSet(IEngine engine, LtiLaunch ltiLaunch){
+        def allExtraParameterSet = true
+
+        ////Process the extra parameters:
+        def extraParameters = engine.getJSONExtraParameters()
+        if(  extraParameters.length() > 0 ) {
+            log.debug " - Extra parameters: " + extraParameters.toString()
+            for( int i=0; i < extraParameters.length(); i++ ){
+                def extraParameter = extraParameters.getJSONObject(i)
+                def extraParameterName = extraParameter.getString("name");
+                log.debug "   - extraParameterName = " + extraParameterName
+                //def extraParameterType = extraParameter.getString("type");
+                //def extraParameterDefaultValue = extraParameter.getString("defaultValue");
+                ////Verify if "extraParameterName" is set for the corresponding LtiResourceLink
+                LtiResourceLink ltiResourceLink = ltiLaunch.getLtiResourceLink()
+                log.debug "   - " + ltiResourceLink
+                def extraParameterValue = ltiResourceLink.getExtraParameterValue(extraParameterName)
+                log.debug "   - extraParameterValue = " + extraParameterValue
+                if( !extraParameterValue ) {
+                    session["parameters"] = engine.getParameters()
+                    allExtraParameterSet = false;
+                    break;
+                } else {
+                    log.debug "   - adding the parameter"
+                    engine.putParameter("extra_" + extraParameterName, extraParameterValue )
+                }
+            }
+            log.debug "  - Parameters after adding extra"
+            logParameters(engine.getParameters())
+        } else {
+            log.debug " - No extra parameters"
+        }
+
+        return allExtraParameterSet
     }
 }
