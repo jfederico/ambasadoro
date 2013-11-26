@@ -17,5 +17,7 @@ public interface IEngine {
     public JSONArray getJSONOverride();
     public IToolProvider getToolProvider();
     public ILTIConstants getLTIConstants();
-    public Map<String, String> getParams();
+    public Map<String, String> getParameters();
+    public String getParameter(String key);
+    public void putParameter(String key, String value);
 }

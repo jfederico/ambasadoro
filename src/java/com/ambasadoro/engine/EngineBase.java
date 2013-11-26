@@ -87,7 +87,16 @@ public class EngineBase implements IEngine {
         return this.toolProvider;
     }
     
-    public Map<String, String> getParams(){
-        return this.toolProvider.getParams();
+    public Map<String, String> getParameters(){
+        return this.toolProvider.getParameters();
     }
+
+    public String getParameter(String key){
+        return this.toolProvider.getParameter(key);
+    }
+
+    public void putParameter(String key, String value){
+        this.toolProvider.putParameter(key, value);
+    }
+
 }

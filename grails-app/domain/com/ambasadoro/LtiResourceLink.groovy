@@ -1,6 +1,8 @@
 package com.ambasadoro
 
-import java.util.Date;
+import java.util.Date
+import org.codehaus.groovy.grails.web.json.JSONArray
+import org.codehaus.groovy.grails.web.json.JSONObject
 
 class LtiResourceLink {
     // Auto Timestamp
@@ -25,5 +27,21 @@ class LtiResourceLink {
     static constraints = {
     }
 
-    String toString() {"[${this.ltiContext}:${this.resourceLinkId}]${this.resourceLinkExtra}:${this.resourceLinkTitle}"}
+    String toString() {"[${this.ltiContext.id}:${this.resourceLinkId}]${this.resourceLinkTitle}:${this.resourceLinkExtra}"}
+
+    String getExtraParameterValue(name){
+        def extraParameterValue = null
+        try{
+            JSONObject extraParameters = new JSONObject(this.resourceLinkExtra)
+            extraParameterValue = extraParameters.getString(name)
+        } catch( Exception e){
+        }
+        return extraParameterValue
+        
+        //for(int i=0; i < extraParameters.length(); i++){
+        //    if( extraParameters.getJSONArray('name') == name ){
+        //        return extraParameters.getJSONArray('name')
+        //   }
+        //}
+    }
 }

@@ -26,7 +26,7 @@ environments {
     development {
         dataSource {
             pooled = true
-            url = "jdbc:mysql://localhost/ambasadoro_dev"
+            url = "jdbc:mysql://localhost/ambasadoro_prod"
         }
     }
     test {

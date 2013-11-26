@@ -45,39 +45,45 @@ class LtiController {
             IEngine engine = ltiEngineFactory.createEngine(ambasadoro, params, endpoint)
             log.debug "  - Initialized ltiEngine. code [" + engine.getToolVendorCode() + "]"
             
-            //log.debug "  - Parameters after override"
-            //ambasadoroService.logParameters(engine.getParams())
+            log.debug "  - Parameters after override"
+            ambasadoroService.logParameters(engine.getParameters())
             
-            def ltiResourceLink = ambasadoroService.saveLtiLaunch(engine.getLTIConstants(), ambasadoro, engine.getParams())
-            log.debug ltiResourceLink
+            LtiLaunch ltiLaunch = ambasadoroService.saveLtiLaunch(engine.getLTIConstants(), ambasadoro, engine.getParameters())
 
-            //def ltiUser = ambasadoroService.saveLtiUser(engine.getLTIConstants(), ambasadoro, engine.getParams())
+            //def ltiUser = ambasadoroService.saveLtiUser(engine.getLTIConstants(), ambasadoro, engine.getParameters())
             //log.debug ltiUser
             
-            //def ltiLaunch = ambasadoroService.saveLtiLaunch(engine.getLTIConstants(), ambasadoro, engine.getParams()))
+            //def ltiLaunch = ambasadoroService.saveLtiLaunch(engine.getLTIConstants(), ambasadoro, engine.getParameters()))
             //log.debug ltiLaunch
 
             
-            //Process the extra parameters:
+            ////Process the extra parameters:
             def extraParameters = engine.getJSONExtraParameters() 
             if(  extraParameters.length() > 0 ) {
                 log.debug " - Extra parameters: " + extraParameters.toString()
-                def allExtraParametersSet = true
-                def extraParameter
+                def allExtraParameterSet = true
                 for( int i=0; i < extraParameters.length(); i++ ){
-                    extraParameter = extraParameters.getJSONObject(i);
+                    def extraParameter = extraParameters.getJSONObject(i)
                     def extraParameterName = extraParameter.getString("name");
+                    log.debug "   - extraParameterName = " + extraParameterName
                     //def extraParameterType = extraParameter.getString("type");
                     //def extraParameterDefaultValue = extraParameter.getString("defaultValue");
-                    //Verify if "extraParameterName" is set for the corresponding LtiResourceLink
-                    if( false ) {
-                        allExtraParametersSet = false;
+                    ////Verify if "extraParameterName" is set for the corresponding LtiResourceLink
+                    LtiResourceLink ltiResourceLink = ltiLaunch.getLtiResourceLink()
+                    log.debug "   - " + ltiResourceLink
+                    def extraParameterValue = ltiResourceLink.getExtraParameterValue(extraParameterName) 
+                    log.debug "   - extraParameterValue = " + extraParameterValue
+                    if( !extraParameterValue ) {
+                        allExtraParameterSet = false;
                         break;
                     } else {
-                        //engine.putParameter(extraParameterName, ltiLaunch.getExtraParameter(extraParameterName) )
+                        log.debug "   - adding the parameter"
+                        engine.putParameter("extra_" + extraParameterName, extraParameterValue )
                     }
                 }
-                session["params"] = params
+                log.debug "  - Parameters after adding extra"
+                ambasadoroService.logParameters(engine.getParameters())
+                //session["params"] = engine.getParameters()
                 //if configured, add them and continue with the launch
                 //else
                 //  if admin/instructor provide UI for configuration
@@ -85,6 +91,7 @@ class LtiController {
             } else {
                 log.debug " - No extra parameters"
             }
+
             //Go for the launch
             //def launchingURL = engine.getLaunchingURL()
             //redirect(url:launchingURL)

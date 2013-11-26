@@ -45,19 +45,19 @@ public class Roles {
     public static String URN_INSTITUTION_ROLE = "urn:lti:instrole:ims/lis/";
     public static String URN_CONTEXT_ROLE = "urn:lti:role:ims/lis/";
 
-    public boolean isLearner(String _roles){
-        boolean response = true;
+    public static boolean isLearner(String _roles){
+        boolean response = false;
         
         String[] roles = _roles.split(",");
         for( int i=0; i < roles.length; i++){
-            if( !roles[i].equals(STUDENT) &&
-                !roles[i].equals(URN_INSTITUTION_ROLE + STUDENT) &&
-                !roles[i].equals(URN_CONTEXT_ROLE + STUDENT) &&
-                !roles[i].equals(LEARNER) &&
-                !roles[i].equals(URN_INSTITUTION_ROLE + LEARNER) &&
-                !roles[i].equals(URN_CONTEXT_ROLE + LEARNER)
+            if( roles[i].equals(STUDENT) ||
+                roles[i].equals(URN_INSTITUTION_ROLE + STUDENT) ||
+                roles[i].equals(URN_CONTEXT_ROLE + STUDENT) ||
+                roles[i].equals(LEARNER) ||
+                roles[i].equals(URN_INSTITUTION_ROLE + LEARNER) ||
+                roles[i].equals(URN_CONTEXT_ROLE + LEARNER)
                 ){
-                response = false;
+                response = true;
                 break;
             }
         }
@@ -65,7 +65,7 @@ public class Roles {
         return response;
     }
     
-    public boolean isStudent(String _roles){
+    public static boolean isStudent(String _roles){
         return isLearner(_roles);
     }
     

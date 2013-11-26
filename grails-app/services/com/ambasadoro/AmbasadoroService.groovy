@@ -1,6 +1,7 @@
 package com.ambasadoro
 
 import com.ambasadoro.exceptions.AmbasadoroException
+import org.ambasadoro.lti.Roles
 
 import net.oauth.OAuth;
 
@@ -37,9 +38,9 @@ class AmbasadoroService {
     
     def saveLtiLaunch(ltiConstants, ambasadoro, params) throws AmbasadoroException, Exception {
         def ltiLaunch = null
-        def ltiUser = null
-        def ltiContext = null
         def ltiResourceLink = null
+        def ltiContext = null
+        def ltiUser = null
         
         def ltiToolConsumer = getLtiToolConsumer(ltiConstants, ambasadoro, params)
         if( ltiToolConsumer == null ) {
@@ -80,11 +81,22 @@ class AmbasadoroService {
                     throw new AmbasadoroException("The ltiResourceLink couldn't be generated", "AmbasadoroError")
                 } else {
                     log.debug " - The ltiResourceLink was saved"
+
+                    ltiLaunch = getLtiLaunch(ltiConstants, ambasadoro, params, ltiResourceLink, ltiUser)
+                    if(ltiLaunch == null){
+                        log.debug " - The ltiLaunch couldn't be generated"
+                        throw new AmbasadoroException("The ltiLaunch couldn't be generated", "AmbasadoroError")
+                    } else if( !ltiLaunch.save(flush:true) ){
+                        log.debug " - The ltiLaunch couldn't be saved"
+                        throw new AmbasadoroException("The ltiLaunch couldn't be generated", "AmbasadoroError")
+                    } else {
+                        log.debug " - The ltiLaunch was saved"
+                    }
                 }
             }
         }
         log.debug " - saveLtiLaunch has ended"
-        return ltiResourceLink
+        return ltiLaunch
     }
     
     def saveLtiUser(ltiConstants, ambasadoro, params) throws AmbasadoroException, Exception {
@@ -186,10 +198,29 @@ class AmbasadoroService {
             }
             resourceLink.resourceLinkTitle = params.containsKey(ltiConstants.RESOURCE_LINK_TITLE) ? params.get(ltiConstants.RESOURCE_LINK_TITLE): ""
             resourceLink.resourceLinkDescription = params.containsKey(ltiConstants.RESOURCE_LINK_DESCRIPTION)? params.get(ltiConstants.RESOURCE_LINK_DESCRIPTION): ""
-            resourceLink.resourceLinkExtra = ""
+            //resourceLink.resourceLinkExtra = "{}"
         }
 
         return resourceLink
+    }
+
+    def getLtiLaunch(ltiConstants, ambasadoro, params, ltiResourceLink, ltiUser) {
+        def launch = null
+
+        launch = LtiLaunch.findWhere(ltiResourceLink: ltiResourceLink, ltiUser: ltiUser)
+        if( launch == null ){
+            launch = new LtiLaunch()
+            launch.ltiResourceLink = ltiResourceLink
+            launch.ltiUser = ltiUser
+        }
+        if( params.containsKey(ltiConstants.ROLES) && Roles.isLearner(params.get(ltiConstants.ROLES)) )
+            launch.resultSourcedId = params.containsKey(ltiConstants.LIS_RESULT_SOURCEDID) ? params.get(ltiConstants.LIS_RESULT_SOURCEDID): ""
+        else
+            launch.resultSourcedId = ""
+        launch.launchPresentationLocale = params.containsKey(ltiConstants.LAUNCH_PRESENTATION_LOCALE) ? params.get(ltiConstants.LAUNCH_PRESENTATION_LOCALE): "en"
+
+
+        return launch
     }
 
     def sanitizePrameters(params){

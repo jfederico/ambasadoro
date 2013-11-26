@@ -19,7 +19,7 @@ class BootStrap {
         ambasadoro.tpEndpoint = "http://localhost/"
         ambasadoro.tpKey = "xxx"
         ambasadoro.tpSecret = "yyy"
-        ambasadoro.tpMeta = "{'properties': [{'name': 'allowEmailAuthentication','type': 'boolean', 'value': 'true'}], 'requiredParameters': ['resource_link_title', 'user_id', 'roles', 'lis_person_contact_email_primary', 'tool_consumer_instance_guid'], 'extraParameters': [{'name': 'toc','type': 'text', 'defaultValue': 'select'}]}"
+        ambasadoro.tpMeta = "{'properties': [{'name': 'allowEmailAuthentication','type': 'boolean', 'value': 'true'}], 'requiredParameters': ['resource_link_title', 'user_id', 'roles', 'lis_person_contact_email_primary', 'tool_consumer_instance_guid'], 'extraParameters': [{'name': 'toc', 'type': 'text', 'defaultValue': 'select'}]}"
         ambasadoro.tcVendorCode = "moodle"
         ambasadoro.tcMeta = "{'overrides': [{'source': 'resource_link_title', 'target': 'custom_resource_link_title'}, {'source': 'tool_consumer_instance_guid', 'target': 'custom_tool_consumer_instance_guid'}]}"
         log.debug ambasadoro

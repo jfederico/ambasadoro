@@ -93,7 +93,15 @@ public class ToolProviderBase implements IToolProvider {
         return reqProp;
     }
 
-    public Map<String, String> getParams(){
+    public Map<String, String> getParameters(){
         return params;
+    }
+    
+    public String getParameter(String key){
+        return params.get(key);
+    }
+
+    public void putParameter(String key, String value){
+        params.put(key, value);
     }
 }
