@@ -37,7 +37,11 @@ class AmbasadoroService {
         return protocol + "://" + endpoint + "/ambasadoro"
     }
     
-    def saveLtiLaunch(ltiConstants, ambasadoro, params) throws AmbasadoroException, Exception {
+    def saveLtiLaunch(engine) throws AmbasadoroException, Exception {
+        def ltiConstants = engine.getLTIConstants()
+        def ambasadoro = engine.getAmbasadoro()
+        def params = engine.getParameters()
+        
         def ltiLaunch = null
         def ltiResourceLink = null
         def ltiContext = null
@@ -79,7 +83,7 @@ class AmbasadoroService {
                     throw new AmbasadoroException("The ltiResourceLink couldn't be generated", "AmbasadoroError")
                 } else if( !ltiResourceLink.save(flush:true) ){
                     log.debug " - The ltiResourceLink couldn't be saved"
-                    throw new AmbasadoroException("The ltiResourceLink couldn't be generated", "AmbasadoroError")
+                    throw new AmbasadoroException("The ltiResourceLink couldn't be saved", "AmbasadoroError")
                 } else {
                     log.debug " - The ltiResourceLink was saved"
 
@@ -196,10 +200,10 @@ class AmbasadoroService {
                 resourceLink = new LtiResourceLink()
                 resourceLink.ltiContext = ltiContext
                 resourceLink.resourceLinkId = resourceLinkId
+                resourceLink.resourceLinkExtra = "{}"
             }
             resourceLink.resourceLinkTitle = params.containsKey(ltiConstants.RESOURCE_LINK_TITLE) ? params.get(ltiConstants.RESOURCE_LINK_TITLE): ""
             resourceLink.resourceLinkDescription = params.containsKey(ltiConstants.RESOURCE_LINK_DESCRIPTION)? params.get(ltiConstants.RESOURCE_LINK_DESCRIPTION): ""
-            //resourceLink.resourceLinkExtra = "{}"
         }
 
         return resourceLink
@@ -219,7 +223,6 @@ class AmbasadoroService {
         else
             launch.resultSourcedId = ""
         launch.launchPresentationLocale = params.containsKey(ltiConstants.LAUNCH_PRESENTATION_LOCALE) ? params.get(ltiConstants.LAUNCH_PRESENTATION_LOCALE): "en"
-
 
         return launch
     }

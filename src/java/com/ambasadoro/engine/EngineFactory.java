@@ -19,7 +19,6 @@ public class EngineFactory implements IEngineFactory {
     public IEngine createEngine(Ambasadoro ambasadoro, Map<String, String> params, String endpoint) throws Exception {
         IEngine toolProviderEngine = null;
         String toolCode = ambasadoro.getTpVendorCode();
-        
         try {
             if(VendorCodes.TP_CODE_TEST.equals(toolCode) ){
                 toolProviderEngine = new TestEngine(ambasadoro, params, endpoint);

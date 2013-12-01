@@ -49,8 +49,7 @@ class LtiController {
             log.debug "  - Parameters after override"
             ambasadoroService.logParameters(engine.getParameters())
             
-            LtiLaunch ltiLaunch = ambasadoroService.saveLtiLaunch(engine.getLTIConstants(), ambasadoro, engine.getParameters())
-            
+            LtiLaunch ltiLaunch = ambasadoroService.saveLtiLaunch(engine)
             
             if( !ambasadoroService.hasAllExtraParameterSet(engine, ltiLaunch) ){
                 if( !Roles.isLearner(engine.getParameter("roles")) ) {

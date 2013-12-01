@@ -56,7 +56,7 @@ public class EngineBase implements IEngine {
     }
 
     public String getToolVendorCode(){
-        return "";
+        return ambasadoro.getTpVendorCode();
     }
 
     public JSONArray getJSONProperties(){
