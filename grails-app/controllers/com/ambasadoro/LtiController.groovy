@@ -62,8 +62,8 @@ class LtiController {
             } else {
                 ///Go for the launch
                 log.debug "<<<< Go for the launch >>>>"
-                //def launchingURL = engine.getLaunchingURL()
-                //redirect(url:launchingURL)
+                def ssoURL = engine.getSSOURL()
+                redirect(url:ssoURL)
             }
 
                 

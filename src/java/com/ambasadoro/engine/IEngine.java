@@ -20,4 +20,7 @@ public interface IEngine {
     public Map<String, String> getParameters();
     public String getParameter(String key);
     public void putParameter(String key, String value);
+    // Command implementation
+    // for SSO
+    public String getSSOURL() throws Exception;
 }

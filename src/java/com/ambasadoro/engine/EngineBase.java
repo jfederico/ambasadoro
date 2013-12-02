@@ -99,4 +99,10 @@ public class EngineBase implements IEngine {
         this.toolProvider.putParameter(key, value);
     }
 
+    // Implementation for SSO
+    public String getSSOURL() throws Exception {
+        String ssoURL;
+        ssoURL = null;
+        return ssoURL;
+    }
 }
