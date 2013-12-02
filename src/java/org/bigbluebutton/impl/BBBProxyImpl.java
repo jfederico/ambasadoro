@@ -19,7 +19,6 @@
 */ 
 package org.bigbluebutton.impl;
 
-import org.bigbluebutton.api.BBBMeeting;
 import org.bigbluebutton.api.BBBProxy;
 
 import java.io.BufferedReader;
@@ -29,12 +28,10 @@ import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -226,18 +223,19 @@ public class BBBProxyImpl implements BBBProxy{
         return this.endpoint + API_SERVERPATH + APICALL_CREATE + "?" + qs;
     }
 
-	public String getJoinURL(String fullName, String meetingID, String password, String createTime, String userID) {
-	    String qs;
-	    qs = "fullName=" + getStringEncoded(fullName);
-	    qs += "&meetingID=" + meetingID;
-	    qs += "&password=" + password;
-	    qs += "".equals(createTime)? "": "&createTime=" + createTime;
-	    qs += "&userID=" + userID;
-	    qs += getCheckSumParameterForQuery(APICALL_JOIN, qs);
-	    
-	    return this.endpoint + API_SERVERPATH + APICALL_JOIN + "?" + qs;
-	}
+    public String getJoinURL(Map<String, String> params){
+        String qs;
 
+        qs = "fullName=" + params.get("fullName");
+        qs += "&meetingID=" + params.get("meetingID");
+        qs += "&password=" + params.get("password");
+        qs += params.containsKey("createTime")? "&createTime=" + params.get("createTime"): "";
+        qs += params.containsKey("userID")? "&userID=" + params.get("userID"): "";
+        qs += getCheckSumParameterForQuery(APICALL_JOIN, qs);
+        
+        return this.endpoint + API_SERVERPATH + APICALL_JOIN + "?" + qs;
+    }
+    
 	public String getIsMeetingRunningURL(String meetingID) {
 	    String qs;
 	    qs = "meetingID=" + meetingID;

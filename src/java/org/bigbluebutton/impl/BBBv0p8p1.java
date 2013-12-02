@@ -52,23 +52,15 @@ public class BBBv0p8p1 extends BBBv0p8p0 {
         return this.endpoint + API_SERVERPATH + APICALL_CREATE + "?" + qs;
     }
     
-    public String getJoinURL(String fullName, String meetingID, String password, String createTime, String userID) {
+    public String getJoinURL(Map<String, String> params) {
         String qs;
 
-        qs = getJoinURL(fullName, meetingID, password, createTime, userID, "" );
-
-        return qs;
-    }
-
-    public String getJoinURL(String fullName, String meetingID, String password, String createTime, String userID, String webVoiceConf ) {
-        String qs;
-
-        qs = "fullName=" + getStringEncoded(fullName);
-        qs += "&meetingID=" + meetingID;
-        qs += "&password=" + password;
-        qs += "".equals(createTime)? "": "&createTime=" + createTime;
-        qs += "&userID=" + userID;
-        qs += "&webVoiceConf=" + webVoiceConf;
+        qs = "fullName=" + params.get("fullName");
+        qs += "&meetingID=" + params.get("meetingID");
+        qs += "&password=" + params.get("password");
+        qs += params.containsKey("createTime")? "&createTime=" + params.get("createTime"): "";
+        qs += params.containsKey("userID")? "&userID=" + params.get("userID"): "";
+        qs += params.containsKey("webVoiceConf")? "&webVoiceConf=" + params.get("webVoiceConf"): "";
         qs += getCheckSumParameterForQuery(APICALL_JOIN, qs);
 
         return this.endpoint + API_SERVERPATH + APICALL_JOIN + "?" + qs;

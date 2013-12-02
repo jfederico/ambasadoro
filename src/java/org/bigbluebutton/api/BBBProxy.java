@@ -49,7 +49,7 @@ public interface BBBProxy {
 
     public String getVersionURL();
     public String getCreateURL(Map<String, String> params);
-    public String getJoinURL(String fullName, String meetingID, String password, String createTime, String userID);
+    public String getJoinURL(Map<String, String> params);
     public String getIsMeetingRunningURL(String meetingID);
     public String getEndURL(String meetingID, String password);
     public String getGetMeetingInfoURL(String meetingID, String password);
