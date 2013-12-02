@@ -15,6 +15,10 @@ class LtiLaunch {
     String launchPresentationLocale = "en"
     String resultSourcedId
 
+    //String tokenID
+    //Date tokenCreated = new Date()
+    //Boolean tokenAccessed = false
+
     static hasMany = [ltiAccessLogs:LtiAccessLog]
     static mapping = {
         ltiAccessLogs cascade: 'all'

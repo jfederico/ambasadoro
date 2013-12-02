@@ -39,7 +39,9 @@ public class BigBlueButtonEngine extends EngineBase{
         try{
             BBBCommand createCommand = new BBBCreateCommand(bbbProxy, meetingParams());
             createCommand.execute();
+            System.out.println("Meeting created");
             ssoURL = bbbProxy.getJoinURL(sessionParams());
+            System.out.println("Joining [" + ssoURL + "]");
         } catch ( BBBException e){
             throw new Exception("Error executing SSO", e.getCause());
         }
@@ -50,7 +52,7 @@ public class BigBlueButtonEngine extends EngineBase{
         Map<String, String> params = toolProvider.getParameters();
         Map<String, String> meetingParams = new HashMap<String, String>();
         // Map ToolProvider parameters with Meeting parameters
-        meetingParams.put("name", "Demo Meeting");
+        meetingParams.put("name", "Demo");
         meetingParams.put("meetingID", "A342344623445624");
         meetingParams.put("attendeePW", "ap");
         meetingParams.put("moderatorPW", "mp");
@@ -62,7 +64,7 @@ public class BigBlueButtonEngine extends EngineBase{
         Map<String, String> params = toolProvider.getParameters();
         Map<String, String> sessionParams = new HashMap<String, String>();
         // Map LtiUser parameters with Session parameters
-        sessionParams.put("fullName", "John Doe");
+        sessionParams.put("fullName", "John");
         sessionParams.put("meetingID", "A342344623445624");
         sessionParams.put("password", "mp");
         //sessionParams.put("createTime", "");
