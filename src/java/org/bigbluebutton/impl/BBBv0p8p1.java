@@ -19,6 +19,8 @@
 */ 
 package org.bigbluebutton.impl;
 
+import java.util.Map;
+
 public class BBBv0p8p1 extends BBBv0p8p0 {
 
 	public BBBv0p8p1(){
@@ -27,5 +29,48 @@ public class BBBv0p8p1 extends BBBv0p8p0 {
 
     public BBBv0p8p1(String endpoint, String secret){
         super(endpoint, secret);
+    }
+
+    public String getCreateURL(Map<String, String> params){
+        String qs;
+
+        qs = "name=" + params.get("name");
+        qs += "&meetingID=" + params.get("meetingID");
+        qs += "&moderatorPW=" + params.get("moderatorPW");
+        qs += "&attendeePW=" + params.get("attendeePW");
+        qs += params.containsKey("welcome")? "&welcome=" + params.get("welcome"): "";
+        qs += params.containsKey("logoutURL")? "&logoutURL=" + params.get("logoutURL"): "";
+        qs += params.containsKey("maxParticipants")? "&maxParticipants=" + params.get("maxParticipants"): "";
+        qs += params.containsKey("voiceBridge")? "&voiceBridge=" + params.get("voiceBridge"): "";
+        qs += params.containsKey("dialNumber")? "&dialNumber=" + params.get("dialNumber"): "";
+        qs += params.containsKey("webVoice")? "&webVoice=" + params.get("webVoice"): "";
+        qs += params.containsKey("record")? "&record=" + params.get("record"): "";
+        qs += params.containsKey("duration")? "&duration=" + params.get("duration"): "";
+        qs += params.containsKey("meta")? "&" + params.get("meta"): "";
+        qs += getCheckSumParameterForQuery(APICALL_CREATE, qs);
+        
+        return this.endpoint + API_SERVERPATH + APICALL_CREATE + "?" + qs;
+    }
+    
+    public String getJoinURL(String fullName, String meetingID, String password, String createTime, String userID) {
+        String qs;
+
+        qs = getJoinURL(fullName, meetingID, password, createTime, userID, "" );
+
+        return qs;
+    }
+
+    public String getJoinURL(String fullName, String meetingID, String password, String createTime, String userID, String webVoiceConf ) {
+        String qs;
+
+        qs = "fullName=" + getStringEncoded(fullName);
+        qs += "&meetingID=" + meetingID;
+        qs += "&password=" + password;
+        qs += "".equals(createTime)? "": "&createTime=" + createTime;
+        qs += "&userID=" + userID;
+        qs += "&webVoiceConf=" + webVoiceConf;
+        qs += getCheckSumParameterForQuery(APICALL_JOIN, qs);
+
+        return this.endpoint + API_SERVERPATH + APICALL_JOIN + "?" + qs;
     }
 }
