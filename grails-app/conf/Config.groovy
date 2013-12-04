@@ -88,11 +88,12 @@ log4j = {
         console name:'console', layout:pattern(conversionPattern: '%d{[dd.MM.yy HH:mm:ss.SSS]} %-5p %c %x - %m%n')
         'null' name:'stacktrace'
     }
-    debug logfile:  'grails.app',
-                    'org.bigbluebutton.api',
-                    'org.bigbluebutton.impl',
-                    'com.ambasadoro.engine.tp.test',
-                    'com.ambasadoro.engine.tp.bigbluebutton'
+    debug logfile:  'grails.app'
+    
+    debug  'org.bigbluebutton.api',
+           'org.bigbluebutton.impl',
+           'com.ambasadoro.engine.tp.test',
+           'com.ambasadoro.engine.tp.bigbluebutton'
 
     error  'org.codehaus.groovy.grails.web.servlet',        // controllers
            'org.codehaus.groovy.grails.web.pages',          // GSP
