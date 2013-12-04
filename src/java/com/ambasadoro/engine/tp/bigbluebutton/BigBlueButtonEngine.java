@@ -7,14 +7,18 @@ import com.ambasadoro.Ambasadoro;
 import com.ambasadoro.engine.EngineBase;
 import com.ambasadoro.engine.VendorCodes;
 
+import org.apache.log4j.Logger;
 import org.bigbluebutton.api.BBBCommand;
 import org.bigbluebutton.api.BBBException;
 import org.bigbluebutton.api.BBBStore;
 import org.bigbluebutton.api.BBBProxy;
 import org.bigbluebutton.impl.BBBStoreImpl;
-import org.bigbluebutton.impl.BBBCreateCommand;
+import org.bigbluebutton.impl.BBBCreateMeeting;
 
 public class BigBlueButtonEngine extends EngineBase{
+
+    private static final Logger log = Logger.getLogger(BigBlueButtonEngine.class);
+
     public static final String TP_VENDOR_CODE = VendorCodes.TP_CODE_BIGBLUEBUTTON;
     public static final String TP_VENDOR_NAME = "BigBlueButton";
     public static final String TP_VENDOR_DESCRIPTION = "Open source web conferencing system for distance learning.";
@@ -37,11 +41,11 @@ public class BigBlueButtonEngine extends EngineBase{
     public String getSSOURL() throws Exception {
         String ssoURL;
         try{
-            BBBCommand createCommand = new BBBCreateCommand(bbbProxy, meetingParams());
-            createCommand.execute();
-            System.out.println("Meeting created");
+            BBBCommand cmd = new BBBCreateMeeting(bbbProxy, meetingParams());
+            cmd.execute();
+            log.info("Meeting created");
             ssoURL = bbbProxy.getJoinURL(sessionParams());
-            System.out.println("Joining [" + ssoURL + "]");
+            log.info("Joining [" + ssoURL + "]");
         } catch ( BBBException e){
             throw new Exception("Error executing SSO", e.getCause());
         }

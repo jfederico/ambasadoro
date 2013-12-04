@@ -90,7 +90,9 @@ log4j = {
     }
     debug logfile:  'grails.app',
                     'org.bigbluebutton.api',
-                    'org.bigbluebutton.impl'
+                    'org.bigbluebutton.impl',
+                    'com.ambasadoro.engine.tp.test',
+                    'com.ambasadoro.engine.tp.bigbluebutton'
 
     error  'org.codehaus.groovy.grails.web.servlet',        // controllers
            'org.codehaus.groovy.grails.web.pages',          // GSP
@@ -107,6 +109,8 @@ log4j = {
            'org.bigbluebutton.impl'
 
     info   'org.bigbluebutton.api',
-           'org.bigbluebutton.impl'
+           'org.bigbluebutton.impl',
+           'com.ambasadoro.engine.tp.test',
+           'com.ambasadoro.engine.tp.bigbluebutton'
 
 }
