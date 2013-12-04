@@ -88,7 +88,9 @@ log4j = {
         console name:'console', layout:pattern(conversionPattern: '%d{[dd.MM.yy HH:mm:ss.SSS]} %-5p %c %x - %m%n')
         'null' name:'stacktrace'
     }
-    debug logfile:"grails.app"
+    debug logfile:  'grails.app',
+                    'org.bigbluebutton.api',
+                    'org.bigbluebutton.impl'
 
     error  'org.codehaus.groovy.grails.web.servlet',        // controllers
            'org.codehaus.groovy.grails.web.pages',          // GSP
@@ -100,5 +102,11 @@ log4j = {
            'org.codehaus.groovy.grails.orm.hibernate',      // hibernate integration
            'org.springframework',
            'org.hibernate',
-           'net.sf.ehcache.hibernate'
+           'net.sf.ehcache.hibernate',
+           'org.bigbluebutton.api',
+           'org.bigbluebutton.impl'
+
+    info   'org.bigbluebutton.api',
+           'org.bigbluebutton.impl'
+
 }

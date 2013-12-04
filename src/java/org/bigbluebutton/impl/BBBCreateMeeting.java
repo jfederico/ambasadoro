@@ -16,32 +16,40 @@
     with BigBlueButton; if not, If not, see <http://www.gnu.org/licenses/>.
 
     Author: Jesus Federico <jesus@blindsidenetworks.com>
-*/ 
+*/
 package org.bigbluebutton.impl;
 
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.bigbluebutton.api.BBBCommand;
 import org.bigbluebutton.api.BBBException;
 import org.bigbluebutton.api.BBBProxy;
 
-public class BBBCreateCommand implements BBBCommand {
+public class BBBCreateMeeting implements BBBCommand {
 
-    BBBProxy proxy;
-    Map<String, String> params;
-    
-    public BBBCreateCommand(BBBProxy proxy, Map<String, String> params){
+    private static final Logger log = Logger.getLogger(BBBCreateMeeting.class);
+
+    private static final String ACTION = "Creating meeting";
+
+    public BBBCreateMeeting(BBBProxy proxy, Map<String, String> params){
         this.proxy = proxy;
         this.params = params;
     }
-    
-    @Override
-    public void execute() throws BBBException {
-        String action = "Creating meeting";
-        System.out.println(action);
-        String createURL = proxy.getCreateURL(params);
-        System.out.println("Executing [" + createURL + "]");
-        BBBProxyImpl.doAPICall(createURL);
+
+    private String getURL(){
+        String url = proxy.getCreateURL(params);
+        return url;
     }
 
+    BBBProxy proxy;
+    Map<String, String> params;
+
+    @Override
+    public void execute() throws BBBException {
+        log.info(ACTION);
+        String url = getURL();
+        log.debug("Executing [" + url + "]");
+        BBBProxyImpl.doAPICall(url);
+    }
 }

@@ -16,65 +16,74 @@
 	with BigBlueButton; if not, If not, see <http://www.gnu.org/licenses/>.
 
 	Author: Jesus Federico <jesus@blindsidenetworks.com>
-*/ 
+ */
 package org.bigbluebutton.impl;
 
 import java.util.Map;
 
 public class BBBv0p8p0 extends BBBProxyImpl {
 
-	public BBBv0p8p0(){
-		super();
-	}
+    public BBBv0p8p0() {
+        super();
+    }
 
-    public BBBv0p8p0(String endpoint, String secret){
+    public BBBv0p8p0(String endpoint, String secret) {
         super(endpoint, secret);
     }
-    
-    public String getCreateURL(Map<String, String> params){
+
+    public String getCreateURL(Map<String, String> params) {
         String qs;
 
         qs = "name=" + params.get("name");
         qs += "&meetingID=" + params.get("meetingID");
         qs += "&moderatorPW=" + params.get("moderatorPW");
         qs += "&attendeePW=" + params.get("attendeePW");
-        qs += params.containsKey("welcome")? "&welcome=" + params.get("welcome"): "";
-        qs += params.containsKey("logoutURL")? "&logoutURL=" + params.get("logoutURL"): "";
-        qs += params.containsKey("voiceBridge")? "&voiceBridge=" + params.get("voiceBridge"): "";
-        qs += params.containsKey("dialNumber")? "&dialNumber=" + params.get("dialNumber"): "";
-        qs += params.containsKey("record")? "&record=" + params.get("record"): "";
-        qs += params.containsKey("duration")? "&duration=" + params.get("duration"): "";
-        qs += params.containsKey("meta")? "&" + params.get("meta"): "";
+        qs += params.containsKey("welcome") ? "&welcome=" + params.get("welcome") : "";
+        qs += params.containsKey("logoutURL") ? "&logoutURL=" + params.get("logoutURL") : "";
+        qs += params.containsKey("voiceBridge") ? "&voiceBridge=" + params.get("voiceBridge") : "";
+        qs += params.containsKey("dialNumber") ? "&dialNumber=" + params.get("dialNumber") : "";
+        qs += params.containsKey("record") ? "&record=" + params.get("record"): "";
+        qs += params.containsKey("duration") ? "&duration=" + params.get("duration") : "";
+        qs += params.containsKey("meta") ? "&" + params.get("meta") : "";
         qs += getCheckSumParameterForQuery(APICALL_CREATE, qs);
-        
+
         return this.endpoint + API_SERVERPATH + APICALL_CREATE + "?" + qs;
     }
-    
-	public String getGetRecordingsURL(String meetingID) {
-	    String qs;
 
-	    qs = "meetingID=" + meetingID;
-	    qs += getCheckSumParameterForQuery(APICALL_GETRECORDINGS, qs);
+    public String getGetMeetingsURL() {
+        String qs;
 
-	    return this.endpoint + API_SERVERPATH + APICALL_GETRECORDINGS + "?" + qs;
-	}
+        qs = "";
+        qs = getCheckSumParameterForQuery(APICALL_GETMEETINGS, qs);
 
-	public String getPublishRecordingsURL(String recordID, boolean publish) {
-	    String qs;
+        return this.endpoint + API_SERVERPATH + APICALL_GETMEETINGS + "?" + qs;
+    }
 
-	    qs = "recordID=" + recordID;
-	    qs += "&publish=" + Boolean.valueOf(publish);
-	    qs += getCheckSumParameterForQuery(APICALL_PUBLISHRECORDINGS, qs);
+    public String getGetRecordingsURL(Map<String, String> params) {
+        String qs;
 
-	    return this.endpoint + API_SERVERPATH + APICALL_PUBLISHRECORDINGS + "?" + qs;
-	}
+        qs = "meetingID=" + params.get("meetingID");
+        qs += getCheckSumParameterForQuery(APICALL_GETRECORDINGS, qs);
 
-	public String getDeleteRecordingsURL(String recordID) {
-	    String qs;
+        return this.endpoint + API_SERVERPATH + APICALL_GETRECORDINGS + "?" + qs;
+    }
 
-	    qs = "recordID=" + recordID;
-	    qs += getCheckSumParameterForQuery(APICALL_DELETERECORDINGS, qs);
+    public String getPublishRecordingsURL(Map<String, String> params) {
+        String qs;
 
-	    return this.endpoint + API_SERVERPATH + APICALL_DELETERECORDINGS + "?" + qs;
-	}
+        qs = "recordID=" + params.get("recordID");
+        qs += "&publish=" + Boolean.valueOf(params.get("publish"));
+        qs += getCheckSumParameterForQuery(APICALL_PUBLISHRECORDINGS, qs);
+
+        return this.endpoint + API_SERVERPATH + APICALL_PUBLISHRECORDINGS + "?" + qs;
+    }
+
+    public String getDeleteRecordingsURL(Map<String, String> params) {
+        String qs;
+
+        qs = "recordID=" + params.get("recordID");
+        qs += getCheckSumParameterForQuery(APICALL_DELETERECORDINGS, qs);
+
+        return this.endpoint + API_SERVERPATH + APICALL_DELETERECORDINGS + "?" + qs;
+    }
 }

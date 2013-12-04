@@ -16,7 +16,7 @@
 	with BigBlueButton; if not, If not, see <http://www.gnu.org/licenses/>.
 
 	Author: Jesus Federico <jesus@blindsidenetworks.com>
-*/ 
+*/
 package org.bigbluebutton.api;
 
 import java.util.Map;
@@ -47,15 +47,18 @@ public interface BBBProxy {
 
     public final static String PARAMETERENCODING = "UTF-8";
 
+    public final static String DEFAULT_ENDPOINT = "http://test-install.blindsidenetworks.com/bigbluebutton/";
+    public final static String DEFAULT_SECRET = "8cd8ef52e8e101574e400365b55e11a6";
+
     public String getVersionURL();
     public String getCreateURL(Map<String, String> params);
     public String getJoinURL(Map<String, String> params);
-    public String getIsMeetingRunningURL(String meetingID);
-    public String getEndURL(String meetingID, String password);
-    public String getGetMeetingInfoURL(String meetingID, String password);
-    public String getGetMeetingsURL(String meetingID, String password);
+    public String getIsMeetingRunningURL(Map<String, String> params);
+    public String getEndURL(Map<String, String> params);
+    public String getGetMeetingInfoURL(Map<String, String> params);
+    public String getGetMeetingsURL();
     public String getStringEncoded(String string);
-    public String getGetRecordingsURL(String meetingID);
-    public String getPublishRecordingsURL(String recordID, boolean publish);
-    public String getDeleteRecordingsURL(String recordID);
+    public String getGetRecordingsURL(Map<String, String> params);
+    public String getPublishRecordingsURL(Map<String, String> params);
+    public String getDeleteRecordingsURL(Map<String, String> params);
 }

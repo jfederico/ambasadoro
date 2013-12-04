@@ -16,7 +16,7 @@
 	with BigBlueButton; if not, If not, see <http://www.gnu.org/licenses/>.
 
 	Author: Jesus Federico <jesus@blindsidenetworks.com>
-*/ 
+*/
 package org.bigbluebutton.impl;
 
 import org.bigbluebutton.api.BBBException;
@@ -32,7 +32,7 @@ public class BBBStoreImpl implements BBBStore {
     public static BBBStoreImpl getInstance() {
         return INSTANCE;
     }
-    
+
     public BBBProxy createProxy(String endpoint, String secret) throws BBBException{
         BBBProxy bbbProxy = null;
         try {

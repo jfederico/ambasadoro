@@ -16,7 +16,7 @@
 	with BigBlueButton; if not, If not, see <http://www.gnu.org/licenses/>.
 
 	Author: Jesus Federico <jesus@blindsidenetworks.com>
-*/ 
+*/
 package org.bigbluebutton.impl;
 
 import java.util.Map;
@@ -48,10 +48,10 @@ public class BBBv0p8p1 extends BBBv0p8p0 {
         qs += params.containsKey("duration")? "&duration=" + params.get("duration"): "";
         qs += params.containsKey("meta")? "&" + params.get("meta"): "";
         qs += getCheckSumParameterForQuery(APICALL_CREATE, qs);
-        
+
         return this.endpoint + API_SERVERPATH + APICALL_CREATE + "?" + qs;
     }
-    
+
     public String getJoinURL(Map<String, String> params) {
         String qs;
 

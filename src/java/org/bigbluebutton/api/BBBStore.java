@@ -16,7 +16,7 @@
 	with BigBlueButton; if not, If not, see <http://www.gnu.org/licenses/>.
 
 	Author: Jesus Federico <jesus@blindsidenetworks.com>
-*/ 
+*/
 package org.bigbluebutton.api;
 
 public interface BBBStore {

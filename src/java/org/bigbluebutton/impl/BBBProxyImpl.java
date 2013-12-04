@@ -16,9 +16,10 @@
 	with BigBlueButton; if not, If not, see <http://www.gnu.org/licenses/>.
 
 	Author: Jesus Federico <jesus@blindsidenetworks.com>
-*/ 
+*/
 package org.bigbluebutton.impl;
 
+import org.bigbluebutton.api.BBBException;
 import org.bigbluebutton.api.BBBProxy;
 
 import java.io.BufferedReader;
@@ -43,22 +44,35 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.log4j.Logger;
 
 public class BBBProxyImpl implements BBBProxy{
+
+    private static final Logger log = Logger.getLogger(BBBProxyImpl.class);
 
 	String endpoint;
 	String secret;
 
 	BBBProxyImpl() {
-	    this.endpoint = "http://test-install.blindsidenetworks.com/bigbluebutton/";
-	    this.secret = "8cd8ef52e8e101574e400365b55e11a6";
+        log.info("Creting BBBProxyImpl()");
+	    this.endpoint = DEFAULT_ENDPOINT;
+	    this.secret = DEFAULT_SECRET;
 	}
 
 	BBBProxyImpl(String endpoint, String secret) {
-	    if( !endpoint.substring(endpoint.length()-1).equals("/") )
-	        endpoint += "/";
-	    this.endpoint = endpoint;
-	    this.secret = secret;
+        log.info("Creting BBBProxyImpl(" + endpoint + ", " + secret + ")");
+	    if( endpoint == null || endpoint.equals("") ){
+	        this.endpoint = DEFAULT_ENDPOINT;
+	    } else {
+	        if( !endpoint.substring(endpoint.length()-1).equals("/") )
+	            endpoint += "/";
+	        this.endpoint = endpoint;
+	    }
+        if( secret == null || secret.equals("") ){
+            this.secret = DEFAULT_SECRET;
+        } else {
+            this.secret = secret;
+        }
 	}
 
 	public void setEndpoint(String endpoint){
@@ -71,16 +85,26 @@ public class BBBProxyImpl implements BBBProxy{
 	    this.secret = secret;
 	}
 
-	public static String getVersion(String endpoint, String secret){
+	public static String getVersion(String endpoint, String secret) throws BBBException{
+        log.info("Executing getVersion");
 	    String version;
 
-	    Map<String, Object> mapResponse = doAPICall(endpoint + API_SERVERPATH);
-	    System.out.println(mapResponse);
-	    version = "0.81";
+	    Map<String, Object> response = doAPICall(endpoint + API_SERVERPATH);
+        String returnCode = (String) response.get("returncode");
+        if (returnCode == null || !returnCode.equals(BBBProxy.APIRESPONSE_SUCCESS)) {
+            log.debug(BBBException.MESSAGEKEY_UNREACHABLE + ": Unreachable server. BigBlueButton server version can not be verified.");
+            throw new BBBException(BBBException.MESSAGEKEY_UNREACHABLE, "Unreachable server. BigBlueButton server version can not be verified.");
+        } else {
+            version = (String) response.get("returncode");
+            if( version == null || version == "" ){
+                log.debug(BBBException.MESSAGEKEY_INVALIDRESPONSE + ": Invalid response. Server version was not received.");
+                throw new BBBException(BBBException.MESSAGEKEY_INVALIDRESPONSE, "Invalid response. Server version was not received.");
+            }
+        }
 
 	    return version;
 	}
-	
+
 	////////////////////
 	/** Make an API call */
     protected static Map<String, Object> doAPICall(String query) {
@@ -89,8 +113,8 @@ public class BBBProxyImpl implements BBBProxy{
         StringBuilder urlStr = new StringBuilder(query);
         try {
             // open connection
-            //log.debug("doAPICall.call: " + query );
-            
+            log.debug("doAPICall.call: " + query );
+
             URL url = new URL(urlStr.toString());
             HttpURLConnection httpConnection = (HttpURLConnection) url.openConnection();
             httpConnection.setUseCaches(false);
@@ -122,7 +146,7 @@ public class BBBProxyImpl implements BBBProxy{
                 httpConnection.disconnect();
 
                 // parse response
-                //log.debug("doAPICall.responseXml: " + xml);
+                log.debug("doAPICall.responseXml: " + xml);
                 //Patch to fix the NaN error
                 String stringXml = xml.toString();
                 stringXml = stringXml.replaceAll(">.\\s+?<", "><");
@@ -135,33 +159,33 @@ public class BBBProxyImpl implements BBBProxy{
                     dom = docBuilder.parse(new InputSource( new StringReader(stringXml)));
                     
                     response = getNodesAsMap(dom, "response");
-                    //log.debug("doAPICall.responseMap: " + response);
+                    log.debug("doAPICall.responseMap: " + response);
                     
                     String returnCode = (String) response.get("returncode");
                     if (BBBProxy.APIRESPONSE_FAILED.equals(returnCode)) {
-                        //log.debug("doAPICall." + (String) response.get("messageKey") + ": Message=" + (String) response.get("message"));
+                        log.debug("doAPICall." + (String) response.get("messageKey") + ": Message=" + (String) response.get("message"));
                     }
 
                 } catch (ParserConfigurationException e) {
-                    //logger.error("Failed to initialise BaseProxy", e)
+                    log.debug("Failed to initialise BaseProxy: " + e.getMessage());
                 }
 
             } else {
-                //log.debug("doAPICall.HTTPERROR: Message=" + "BBB server responded with HTTP status code " + responseCode);
+                log.debug("doAPICall.HTTPERROR: Message=" + "BBB server responded with HTTP status code " + responseCode);
             }
 
         } catch(IOException e) {
-            //log.debug("doAPICall.IOException: Message=" + e.getMessage());
+            log.debug("doAPICall.IOException: Message=" + e.getMessage());
         } catch(SAXException e) {
-            //log.debug("doAPICall.SAXException: Message=" + e.getMessage());
+            log.debug("doAPICall.SAXException: Message=" + e.getMessage());
         } catch(IllegalArgumentException e) {
-            //log.debug("doAPICall.IllegalArgumentException: Message=" + e.getMessage());
+            log.debug("doAPICall.IllegalArgumentException: Message=" + e.getMessage());
         } catch(Exception e) {
-            //log.debug("doAPICall.Exception: Message=" + e.getMessage());
+            log.debug("doAPICall.Exception: Message=" + e.getMessage());
         }
         return response;
     }
-    
+
     /** Get all nodes under the specified element tag name as a Java map */
     protected static Map<String, Object> getNodesAsMap(Document dom, String elementTagName) {
         Node firstNode = dom.getElementsByTagName(elementTagName).item(0);
@@ -202,13 +226,14 @@ public class BBBProxyImpl implements BBBProxy{
         return map;
     }
     /////////////
-	
+
     public String getVersionURL(){
         return this.endpoint + API_SERVERPATH;
     }
-    
+
     public String getCreateURL(Map<String, String> params){
         String qs;
+
         qs = "name=" + params.get("name");
         qs += "&meetingID=" + params.get("meetingID");
         qs += "&moderatorPW=" + params.get("moderatorPW");
@@ -236,37 +261,42 @@ public class BBBProxyImpl implements BBBProxy{
         return this.endpoint + API_SERVERPATH + APICALL_JOIN + "?" + qs;
     }
     
-	public String getIsMeetingRunningURL(String meetingID) {
+	public String getIsMeetingRunningURL(Map<String, String> params) {
 	    String qs;
-	    qs = "meetingID=" + meetingID;
+
+        qs = "meetingID=" + params.get("meetingID");
 	    qs += getCheckSumParameterForQuery(APICALL_ISMEETINGRUNNING, qs);
 	    
 	    return this.endpoint + API_SERVERPATH + APICALL_ISMEETINGRUNNING + "?" + qs;
 	}
 
-	public String getEndURL(String meetingID, String password) {
+	public String getEndURL(Map<String, String> params) {
 	    String qs;
-	    qs = "meetingID=" + meetingID;
-	    qs += "&password=" + password;
+
+        qs = "meetingID=" + params.get("meetingID");
+        qs += "&password=" + params.get("password");
 	    qs += getCheckSumParameterForQuery(APICALL_END, qs);
 	    
 	    return this.endpoint + API_SERVERPATH + APICALL_END + "?" + qs;
 	}
 
-	public String getGetMeetingInfoURL(String meetingID, String password) {
+	public String getGetMeetingInfoURL(Map<String, String> params) {
 	    String qs;
-	    qs = "meetingID=" + meetingID;
-	    qs += "&password=" + password;
+
+        qs = "meetingID=" + params.get("meetingID");
+        qs += "&password=" + params.get("password");
 	    qs += getCheckSumParameterForQuery(APICALL_GETMEETINGINFO, qs);
 	    
 	    return this.endpoint + API_SERVERPATH + APICALL_GETMEETINGINFO + "?" + qs;
 	}
 
-	public String getGetMeetingsURL(String meetingID, String password) {
+	public String getGetMeetingsURL() {
 	    String qs;
-	    qs = getCheckSumParameterForQuery(APICALL_END, "");
-	    
-	    return this.endpoint + API_SERVERPATH + APICALL_END + "?" + qs;
+
+	    qs = "random=xyz";
+	    qs = getCheckSumParameterForQuery(APICALL_GETMEETINGS, qs);
+
+	    return this.endpoint + API_SERVERPATH + APICALL_GETMEETINGS + "?" + qs;
 	}
 
 	public String getStringEncoded(String string){
@@ -287,15 +317,15 @@ public class BBBProxyImpl implements BBBProxy{
 	        return "";
 	}
 
-    public String getGetRecordingsURL(String meetingID) {
+    public String getGetRecordingsURL(Map<String, String> params) {
         return null;
     }
 
-    public String getPublishRecordingsURL(String recordID, boolean publish) {
+    public String getPublishRecordingsURL(Map<String, String> params) {
         return null;
     }
 
-    public String getDeleteRecordingsURL(String recordID) {
+    public String getDeleteRecordingsURL(Map<String, String> params) {
         return null;
     }
 }
