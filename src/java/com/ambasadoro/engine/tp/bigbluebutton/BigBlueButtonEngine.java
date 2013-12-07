@@ -15,6 +15,8 @@ import org.bigbluebutton.api.BBBProxy;
 import org.bigbluebutton.impl.BBBStoreImpl;
 import org.bigbluebutton.impl.BBBCreateMeeting;
 
+import org.apache.commons.codec.digest.DigestUtils;
+
 public class BigBlueButtonEngine extends EngineBase{
 
     private static final Logger log = Logger.getLogger(BigBlueButtonEngine.class);
@@ -56,12 +58,12 @@ public class BigBlueButtonEngine extends EngineBase{
         Map<String, String> params = tp.getParameters();
         Map<String, String> meetingParams = new HashMap<String, String>();
         // Map ToolProvider parameters with Meeting parameters
-        
-        meetingParams.put("name", params.get("resource_link_title"));
-        meetingParams.put("meetingID", "resource_link_id");
-        meetingParams.put("attendeePW", "ap");
-        meetingParams.put("moderatorPW", "mp");
-        
+
+        meetingParams.put("name", getValidatedMeetingName(params.get("resource_link_title")));
+        meetingParams.put("meetingID", getValidatedMeetingId(params.get("resource_link_id"), params.get("oauth_consumer_key")));
+        meetingParams.put("attendeePW", DigestUtils.shaHex("ap" + params.get("resource_link_id") + params.get("oauth_consumer_key")));
+        meetingParams.put("moderatorPW", DigestUtils.shaHex("mp" + params.get("resource_link_id") + params.get("oauth_consumer_key")));
+
         return meetingParams;
     }
 
@@ -76,6 +78,18 @@ public class BigBlueButtonEngine extends EngineBase{
         //sessionParams.put("userID", "");
 
         return sessionParams;
+    }
+
+    private String getValidatedMeetingName(String meetingName){
+        return (meetingName == null || meetingName == "")? "Meeting": meetingName;
+    }
+
+    private String getValidatedMeetingId(String resourceId, String consumerId){
+        return DigestUtils.shaHex(resourceId + consumerId);
+    }
+
+    private String getValidatedLogoutURL(String logoutURL){
+        return (logoutURL == null)? "": logoutURL;
     }
 
 }

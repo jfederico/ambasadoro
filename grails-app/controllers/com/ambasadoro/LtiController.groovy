@@ -16,7 +16,6 @@ import com.ambasadoro.engine.IEngineFactory
 import com.ambasadoro.engine.VendorCodes
 import com.ambasadoro.exceptions.AmbasadoroException
 
-import org.ambasadoro.lti.IToolProvider
 import org.ambasadoro.lti.Roles
 
 import net.oauth.OAuth;
