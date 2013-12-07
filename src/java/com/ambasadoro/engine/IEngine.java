@@ -2,8 +2,7 @@ package com.ambasadoro.engine;
 
 import java.util.Map;
 
-import org.ambasadoro.lti.ILTIConstants;
-import org.ambasadoro.lti.IToolProvider;
+import org.lti.api.LTIToolProvider;
 import org.json.JSONArray;
 
 public interface IEngine {
@@ -15,8 +14,7 @@ public interface IEngine {
     public JSONArray getJSONRequiredParameters();
     public JSONArray getJSONExtraParameters();
     public JSONArray getJSONOverride();
-    public IToolProvider getToolProvider();
-    public ILTIConstants getLTIConstants();
+    public LTIToolProvider getToolProvider();
     public Map<String, String> getParameters();
     public String getParameter(String key);
     public void putParameter(String key, String value);

@@ -24,7 +24,7 @@ public class BigBlueButtonEngine extends EngineBase{
     public static final String TP_VENDOR_DESCRIPTION = "Open source web conferencing system for distance learning.";
     public static final String TP_VENDOR_URL = "http://www.bigbluebutton.org/";
     public static final String TP_VENDOR_CONTACT_EMAIL = "bigbluebutton-users@googlegroups.com";
-
+    
     BBBStore bbbStore = BBBStoreImpl.getInstance();
     BBBProxy bbbProxy;
 
@@ -53,11 +53,12 @@ public class BigBlueButtonEngine extends EngineBase{
     }
 
     private Map<String, String> meetingParams(){
-        Map<String, String> params = toolProvider.getParameters();
+        Map<String, String> params = tp.getParameters();
         Map<String, String> meetingParams = new HashMap<String, String>();
         // Map ToolProvider parameters with Meeting parameters
-        meetingParams.put("name", "Demo");
-        meetingParams.put("meetingID", "A342344623445624");
+        
+        meetingParams.put("name", params.get("resource_link_title"));
+        meetingParams.put("meetingID", "resource_link_id");
         meetingParams.put("attendeePW", "ap");
         meetingParams.put("moderatorPW", "mp");
         
@@ -65,7 +66,7 @@ public class BigBlueButtonEngine extends EngineBase{
     }
 
     private Map<String, String> sessionParams(){
-        Map<String, String> params = toolProvider.getParameters();
+        Map<String, String> params = tp.getParameters();
         Map<String, String> sessionParams = new HashMap<String, String>();
         // Map LtiUser parameters with Session parameters
         sessionParams.put("fullName", "John");

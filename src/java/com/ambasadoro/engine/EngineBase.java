@@ -6,18 +6,22 @@ import com.ambasadoro.Ambasadoro;
 import com.ambasadoro.engine.IEngine;
 import com.ambasadoro.exceptions.AmbasadoroException;
 
-import org.ambasadoro.lti.ILTIConstants;
-import org.ambasadoro.lti.IToolProvider;
-import org.ambasadoro.lti.v1_0.*;
+import org.apache.log4j.Logger;
+import org.lti.api.LTIToolProvider;
+import org.lti.api.LTIStore;
+import org.lti.impl.LTIStoreImpl;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class EngineBase implements IEngine {
 
+    private static final Logger log = Logger.getLogger(EngineBase.class);
+    
     protected Ambasadoro ambasadoro;
 
-    protected ILTIConstants ltiConstants = new LTIConstants();
-    protected IToolProvider toolProvider;
+    //protected IToolProvider toolProvider;
+    protected LTIStore ltiStore;
+    protected LTIToolProvider tp;
     protected JSONObject tpMeta;
     protected JSONObject tcMeta;
     
@@ -29,18 +33,19 @@ public class EngineBase implements IEngine {
             this.tcMeta = new JSONObject(ambasadoro.getTcMeta());
             System.out.println(this.tcMeta);
 
-            this.toolProvider = new ToolProvider(params);
-            if( !this.toolProvider.hasValidSignature(endpoint, ambasadoro.getLtiSecret()) )
+            ltiStore = LTIStoreImpl.getInstance();
+            this.tp = ltiStore.createToolProvider(endpoint, ambasadoro.getLtiKey(), ambasadoro.getLtiSecret(), params, "1.0");
+            if( !this.tp.hasValidSignature() )
                 throw new AmbasadoroException("OAuth signature is NOT valid", "OAuthError" );
             else
                 System.out.println("OAuth signature is valid");
-
-            this.toolProvider.overrideParameters(getJSONOverride());
-            if( !this.toolProvider.hasRequiredParameters(getJSONRequiredParameters()) )
+            
+            this.tp.overrideParameters(getJSONOverride());
+            if( !this.tp.hasRequiredParameters(getJSONRequiredParameters()) )
                 throw new AmbasadoroException("Missing required parameters", "OAuthError");
             else
                 System.out.println("All required parameters are included");
-
+            
         } catch( Exception e) {
             throw e;
         }
@@ -79,24 +84,20 @@ public class EngineBase implements IEngine {
         return this.ambasadoro;
     }
 
-    public ILTIConstants getLTIConstants(){
-        return this.ltiConstants;
-    }
-
-    public IToolProvider getToolProvider(){
-        return this.toolProvider;
+    public LTIToolProvider getToolProvider(){
+        return this.tp;
     }
     
     public Map<String, String> getParameters(){
-        return this.toolProvider.getParameters();
+        return this.tp.getParameters();
     }
 
     public String getParameter(String key){
-        return this.toolProvider.getParameter(key);
+        return this.tp.getParameter(key);
     }
 
     public void putParameter(String key, String value){
-        this.toolProvider.putParameter(key, value);
+        this.tp.putParameter(key, value);
     }
 
     // Implementation for SSO
