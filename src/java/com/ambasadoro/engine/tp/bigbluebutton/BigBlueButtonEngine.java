@@ -14,7 +14,7 @@ import org.bigbluebutton.api.BBBStore;
 import org.bigbluebutton.api.BBBProxy;
 import org.bigbluebutton.impl.BBBStoreImpl;
 import org.bigbluebutton.impl.BBBCreateMeeting;
-import org.lti.LTIRoles;
+import org.lti.api.LTIRoles;
 import org.apache.commons.codec.digest.DigestUtils;
 
 public class BigBlueButtonEngine extends EngineBase{

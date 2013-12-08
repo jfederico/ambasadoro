@@ -48,7 +48,7 @@ grails.project.dependency.resolution = {
         build   "org.bigbluebutton:bigbluebutton-api:1.0.5"
         build   "net.oauth:oauth:1.0.1"
         build   "org.json:json:20131018"
-        build   "org.lti:lti:1.0.3"
+        build   "org.lti:lti:1.0.4"
     }
 
     plugins {
