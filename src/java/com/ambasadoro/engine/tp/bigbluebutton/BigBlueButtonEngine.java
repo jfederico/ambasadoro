@@ -14,7 +14,7 @@ import org.bigbluebutton.api.BBBStore;
 import org.bigbluebutton.api.BBBProxy;
 import org.bigbluebutton.impl.BBBStoreImpl;
 import org.bigbluebutton.impl.BBBCreateMeeting;
-
+import org.lti.LTIRoles;
 import org.apache.commons.codec.digest.DigestUtils;
 
 public class BigBlueButtonEngine extends EngineBase{
@@ -58,11 +58,13 @@ public class BigBlueButtonEngine extends EngineBase{
         Map<String, String> params = tp.getParameters();
         Map<String, String> meetingParams = new HashMap<String, String>();
         // Map ToolProvider parameters with Meeting parameters
-
         meetingParams.put("name", getValidatedMeetingName(params.get("resource_link_title")));
         meetingParams.put("meetingID", getValidatedMeetingId(params.get("resource_link_id"), params.get("oauth_consumer_key")));
         meetingParams.put("attendeePW", DigestUtils.shaHex("ap" + params.get("resource_link_id") + params.get("oauth_consumer_key")));
         meetingParams.put("moderatorPW", DigestUtils.shaHex("mp" + params.get("resource_link_id") + params.get("oauth_consumer_key")));
+        //meetingParams.put("voiceBridge", "0");
+        //meetingParams.put("record", "false");
+        //meetingParams.put("duration", "0");
 
         return meetingParams;
     }
@@ -71,11 +73,14 @@ public class BigBlueButtonEngine extends EngineBase{
         Map<String, String> params = tp.getParameters();
         Map<String, String> sessionParams = new HashMap<String, String>();
         // Map LtiUser parameters with Session parameters
-        sessionParams.put("fullName", "John");
-        sessionParams.put("meetingID", "A342344623445624");
-        sessionParams.put("password", "mp");
+        sessionParams.put("fullName", getValidatedUserFullName(params));
+        sessionParams.put("meetingID", getValidatedMeetingId(params.get("resource_link_id"), params.get("oauth_consumer_key")));
+        if( LTIRoles.isStudent(params.get("roles")) || LTIRoles.isLearner(params.get("roles")) )
+            sessionParams.put("password", DigestUtils.shaHex("ap" + params.get("resource_link_id") + params.get("oauth_consumer_key")));
+        else
+            sessionParams.put("password", DigestUtils.shaHex("mp" + params.get("resource_link_id") + params.get("oauth_consumer_key")));
         //sessionParams.put("createTime", "");
-        //sessionParams.put("userID", "");
+        sessionParams.put("userID", DigestUtils.shaHex( params.get("user_id") + params.get("oauth_consumer_key")));
 
         return sessionParams;
     }
@@ -92,4 +97,22 @@ public class BigBlueButtonEngine extends EngineBase{
         return (logoutURL == null)? "": logoutURL;
     }
 
+    private String getValidatedUserFullName(Map<String, String> params){
+        String userFullName = params.get("lis_person_name_full");
+        String userFirstName = params.get("lis_person_name_given");
+        String userLastName = params.get("lis_person_name_family");
+        if( userFullName == null || userFullName == "" ){
+            if( userFirstName != null && userFirstName != "" ){
+                userFullName = userFirstName;
+            }
+            if( userLastName != null && userLastName != "" ){
+                userFullName += userFullName.length() > 0? " ": "";
+                userFullName += userLastName;
+            }
+            if( userFullName == null || userFullName == "" ){
+                userFullName = ( LTIRoles.isStudent(params.get("roles"), true) || LTIRoles.isLearner(params.get("roles"), true) )? "Viewer" : "Moderator";
+            }
+        }
+        return userFullName;
+    }
 }
