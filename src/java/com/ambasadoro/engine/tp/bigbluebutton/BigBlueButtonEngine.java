@@ -103,6 +103,8 @@ public class BigBlueButtonEngine extends EngineBase{
         try {
             meetingName = URLEncoder.encode(meetingName, "UTF-8");
         } catch (UnsupportedEncodingException e) {
+            log.debug("Error encoding meetingName: " + e.getMessage());
+            meetingName = "Meeting";
         }
         return meetingName;
     }
@@ -134,6 +136,8 @@ public class BigBlueButtonEngine extends EngineBase{
         try {
             userFullName = URLEncoder.encode(userFullName, "UTF-8");
         } catch (UnsupportedEncodingException e) {
+            log.debug("Error encoding userFullName: " + e.getMessage());
+            userFullName = "User";
         }
         return userFullName;
     }
