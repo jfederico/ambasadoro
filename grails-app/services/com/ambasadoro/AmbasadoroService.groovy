@@ -38,7 +38,7 @@ class AmbasadoroService {
     }
     
     def saveLtiLaunch(engine) throws AmbasadoroException, Exception {
-        def ltiConstants = engine.getLTIConstants()
+        def ltiConstants = engine.getToolProvider()
         def ambasadoro = engine.getAmbasadoro()
         def params = engine.getParameters()
         

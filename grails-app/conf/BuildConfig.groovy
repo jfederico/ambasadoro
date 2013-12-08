@@ -44,11 +44,11 @@ grails.project.dependency.resolution = {
     dependencies {
         // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes e.g.
 
-        runtime "mysql:mysql-connector-java:5.1.22"
-        build   "org.bigbluebutton:bigbluebutton-api:1.0.5"
-        build   "net.oauth:oauth:1.0.1"
-        build   "org.json:json:20131018"
-        build   "org.lti:lti:1.0.4"
+        runtime   "mysql:mysql-connector-java:5.1.22"
+        runtime   "org.json:json:20131018"
+        runtime   "org.bigbluebutton:bigbluebutton-api:1.0.5"
+        runtime   "net.oauth:oauth:1.0.1"
+        runtime   "org.lti:lti:1.0.4"
     }
 
     plugins {
