@@ -61,13 +61,13 @@ public class BigBlueButtonEngine extends EngineBase{
         Map<String, String> meetingParams = new HashMap<String, String>();
         // Map ToolProvider parameters with Meeting parameters
         //meetingParams.put("name", "Demo");
-        meetingParams.put("meetingID", "A342344623445624");
-        meetingParams.put("attendeePW", "ap");
-        meetingParams.put("moderatorPW", "mp");
+        //meetingParams.put("meetingID", "A342344623445624");
+        //meetingParams.put("attendeePW", "ap");
+        //meetingParams.put("moderatorPW", "mp");
         meetingParams.put("name", getValidatedMeetingName(params.get("resource_link_title")));
-        //meetingParams.put("meetingID", getValidatedMeetingId(params.get("resource_link_id"), params.get("oauth_consumer_key")));
-        //meetingParams.put("attendeePW", DigestUtils.shaHex("ap" + params.get("resource_link_id") + params.get("oauth_consumer_key")));
-        //meetingParams.put("moderatorPW", DigestUtils.shaHex("mp" + params.get("resource_link_id") + params.get("oauth_consumer_key")));
+        meetingParams.put("meetingID", getValidatedMeetingId(params.get("resource_link_id"), params.get("oauth_consumer_key")));
+        meetingParams.put("attendeePW", DigestUtils.shaHex("ap" + params.get("resource_link_id") + params.get("oauth_consumer_key")));
+        meetingParams.put("moderatorPW", DigestUtils.shaHex("mp" + params.get("resource_link_id") + params.get("oauth_consumer_key")));
         ////meetingParams.put("voiceBridge", "0");
         ////meetingParams.put("record", "false");
         ////meetingParams.put("duration", "0");
@@ -80,19 +80,19 @@ public class BigBlueButtonEngine extends EngineBase{
         Map<String, String> sessionParams = new HashMap<String, String>();
         // Map LtiUser parameters with Session parameters
         //sessionParams.put("fullName", "John");
-        sessionParams.put("meetingID", "A342344623445624");
-        sessionParams.put("password", "mp");
+        //sessionParams.put("meetingID", "A342344623445624");
+        //sessionParams.put("password", "mp");
         //sessionParams.put("createTime", "");
         //sessionParams.put("userID", "");
 
         sessionParams.put("fullName", getValidatedUserFullName(params));
-        //sessionParams.put("meetingID", getValidatedMeetingId(params.get("resource_link_id"), params.get("oauth_consumer_key")));
-        //if( LTIRoles.isStudent(params.get("roles")) || LTIRoles.isLearner(params.get("roles")) )
-        //    sessionParams.put("password", DigestUtils.shaHex("ap" + params.get("resource_link_id") + params.get("oauth_consumer_key")));
-        //else
-        //    sessionParams.put("password", DigestUtils.shaHex("mp" + params.get("resource_link_id") + params.get("oauth_consumer_key")));
+        sessionParams.put("meetingID", getValidatedMeetingId(params.get("resource_link_id"), params.get("oauth_consumer_key")));
+        if( LTIRoles.isStudent(params.get("roles")) || LTIRoles.isLearner(params.get("roles")) )
+            sessionParams.put("password", DigestUtils.shaHex("ap" + params.get("resource_link_id") + params.get("oauth_consumer_key")));
+        else
+            sessionParams.put("password", DigestUtils.shaHex("mp" + params.get("resource_link_id") + params.get("oauth_consumer_key")));
         ////sessionParams.put("createTime", "");
-        //sessionParams.put("userID", DigestUtils.shaHex( params.get("user_id") + params.get("oauth_consumer_key")));
+        sessionParams.put("userID", DigestUtils.shaHex( params.get("user_id") + params.get("oauth_consumer_key")));
 
         return sessionParams;
     }
