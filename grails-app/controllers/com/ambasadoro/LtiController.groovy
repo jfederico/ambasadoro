@@ -16,7 +16,7 @@ import com.ambasadoro.engine.IEngineFactory
 import com.ambasadoro.engine.VendorCodes
 import com.ambasadoro.exceptions.AmbasadoroException
 
-import org.ambasadoro.lti.Roles
+import org.lti.api.LTIRoles
 
 import net.oauth.OAuth;
 
@@ -51,7 +51,8 @@ class LtiController {
             LtiLaunch ltiLaunch = ambasadoroService.saveLtiLaunch(engine)
             
             if( !ambasadoroService.hasAllExtraParameterSet(engine, ltiLaunch) ){
-                if( !Roles.isLearner(engine.getParameter("roles")) ) {
+                //if( !LTIRoles.isLearner(engine.getParameter("roles"), LTIRoles.EXCLUSIVE) && !LTIRoles.isStudent(engine.getParameter("roles"), LTIRoles.EXCLUSIVE)) {
+                if( !LTIRoles.isLearner(engine.getParameter("roles"), true) && !LTIRoles.isStudent(engine.getParameter("roles"), true)) {
                     ///Present interface for setting up extraParameters   
                     log.debug "<<<< Present interface for setting up extraParameters >>>>"
                 } else {

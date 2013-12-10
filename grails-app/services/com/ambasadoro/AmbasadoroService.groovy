@@ -2,7 +2,7 @@ package com.ambasadoro
 
 import com.ambasadoro.engine.IEngine
 import com.ambasadoro.exceptions.AmbasadoroException
-import org.ambasadoro.lti.Roles
+import org.lti.api.LTIRoles
 
 import net.oauth.OAuth;
 
@@ -218,7 +218,7 @@ class AmbasadoroService {
             launch.ltiResourceLink = ltiResourceLink
             launch.ltiUser = ltiUser
         }
-        if( params.containsKey(ltiConstants.ROLES) && Roles.isLearner(params.get(ltiConstants.ROLES)) )
+        if( params.containsKey(ltiConstants.ROLES) && (LTIRoles.isLearner(params.get(ltiConstants.ROLES)) || LTIRoles.isStudent(params.get(ltiConstants.ROLES))) )
             launch.resultSourcedId = params.containsKey(ltiConstants.LIS_RESULT_SOURCEDID) ? params.get(ltiConstants.LIS_RESULT_SOURCEDID): ""
         else
             launch.resultSourcedId = ""
