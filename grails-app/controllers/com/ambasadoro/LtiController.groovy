@@ -51,6 +51,7 @@ class LtiController {
             LtiLaunch ltiLaunch = ambasadoroService.saveLtiLaunch(engine)
             
             if( !ambasadoroService.hasAllExtraParameterSet(engine, ltiLaunch) ){
+                session["parameters"] = engine.getParameters()
                 //if( !LTIRoles.isLearner(engine.getParameter("roles"), LTIRoles.EXCLUSIVE) && !LTIRoles.isStudent(engine.getParameter("roles"), LTIRoles.EXCLUSIVE)) {
                 if( !LTIRoles.isLearner(engine.getParameter("roles"), true) && !LTIRoles.isStudent(engine.getParameter("roles"), true)) {
                     ///Present interface for setting up extraParameters   

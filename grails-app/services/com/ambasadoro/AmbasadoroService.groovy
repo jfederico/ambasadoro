@@ -253,7 +253,6 @@ class AmbasadoroService {
                 def extraParameterValue = ltiResourceLink.getExtraParameterValue(extraParameterName)
                 log.debug "   - extraParameterValue = " + extraParameterValue
                 if( !extraParameterValue ) {
-                    session["parameters"] = engine.getParameters()
                     allExtraParameterSet = false;
                     break;
                 } else {

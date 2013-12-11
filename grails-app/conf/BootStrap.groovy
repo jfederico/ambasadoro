@@ -42,7 +42,7 @@ class BootStrap {
         ambasadoro.tpEndpoint = "http://test-install.blindsidenetworks.com/bigbluebutton/"
         ambasadoro.tpKey = "xxx"
         ambasadoro.tpSecret = "8cd8ef52e8e101574e400365b55e11a6"
-        ambasadoro.tpMeta = "{'properties': [], 'requiredParameters': ['tool_consumer_instance_guid','resource_link_title', 'user_id', 'roles'], 'extraParameters': []}"
+        ambasadoro.tpMeta = "{'properties': [], 'requiredParameters': ['tool_consumer_instance_guid','resource_link_title', 'user_id', 'roles'], 'extraParameters': [{'name': 'recording', 'type': 'boolean', 'defaultValue': 'false'}, {'name': 'duration', 'type': 'numeric', 'defaultValue': '1'}]}"
         ambasadoro.tcVendorCode = "moodle"
         ambasadoro.tcMeta = "{'overrides': [{'source': 'resource_link_title', 'target': 'custom_resource_link_title'}, {'source': 'tool_consumer_instance_guid', 'target': 'custom_tool_consumer_instance_guid'}]}"
         log.debug ambasadoro
