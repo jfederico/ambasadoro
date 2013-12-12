@@ -268,4 +268,24 @@ class AmbasadoroService {
 
         return allExtraParameterSet
     }
+    
+    def getExtraParameters(IEngine engine){
+        List<Map<String, String>> parameters = new ArrayList<Map<String, String>>()
+        def extraParameters = engine.getJSONExtraParameters()
+        if( extraParameters != null &&  extraParameters.length() > 0 ) {
+            log.debug " - Extra parameters: " + extraParameters.toString()
+            for( int i=0; i < extraParameters.length(); i++ ){
+                def extraParameter = extraParameters.getJSONObject(i)
+                Map<String, String> parameter = new HashMap<String, String>()
+                parameter.put("name", extraParameter.getString("name"))
+                parameter.put("type", extraParameter.getString("type"))
+                parameter.put("defaultValue", extraParameter.getString("defaultValue"))
+                parameters.add(parameter)
+            }
+            log.debug " - Extra parameters: " + parameters.toString()
+        } else {
+            log.debug " - No extra parameters"
+        }
+        return parameters
+    }
 }

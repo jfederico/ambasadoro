@@ -26,12 +26,12 @@ class LtiController {
 	
     IEngineFactory ltiEngineFactory = EngineFactory.getInstance()
     
-    def index() { 
+    def index = { 
         log.debug "###############index###############"
 		ambasadoroService.logParameters(params)
 	}
 	
-	def tool() {
+	def tool = {
         log.debug "###############tool###############"
 		ambasadoroService.logParameters(params)
 
@@ -60,14 +60,14 @@ class LtiController {
                     ///Present error message telling learners that extraParameters are not set yet
                     log.debug "<<<< Present error message telling learners that extraParameters are not set yet >>>>"
                 }
+                //redirect(action:tool_ui, params:session["parameters"])
+                render(view: "tool_ui", model: ['extraParameters': ambasadoroService.getExtraParameters(engine), 'params': session["parameters"]])
             } else {
                 ///Go for the launch
                 log.debug "<<<< Go for the launch >>>>"
                 def ssoURL = engine.getSSOURL()
-                redirect(url:ssoURL)
+                redirect(url: ssoURL)
             }
-
-                
         } catch(AmbasadoroException e) {
             log.debug "  - AmbasadoroException: " + e.getErrorCode() + ":" + e.getLocalizedMessage()
             render(view: "error", model: ['resultMessageKey': e.getErrorCode(), 'resultMessage': e.getLocalizedMessage()])
@@ -77,7 +77,7 @@ class LtiController {
         }
 	}
 	
-	def toolCartridge() {
+	def tool_cartridge = {
         log.debug "###############toolCartridge###############"
 		ambasadoroService.logParameters(params)
         try {
@@ -90,9 +90,10 @@ class LtiController {
         }
 	}
 	
-	def toolUi() {
+	def tool_ui = {
         log.debug "###############toolUi###############"
 		ambasadoroService.logParameters(params)
+        render(view: "tool_ui")
 	}
     
     private String getCartridgeXML(Ambasadoro ambasadoro, Object engineClass){
