@@ -68,6 +68,7 @@ class LtiController {
                 log.debug("isLearner=" + isLearner)
                 def nonce = TimeStamp.getCurrentTime()
                 session["nonce"] = nonce.toString()
+                session["lti_launch_id"] = ltiLaunch.getId()
                 render( view: "tool_ui", model: ['extraParameters': ambasadoroService.getExtraParameters(engine), 'params': session["parameters"], 'isLearner': isLearner, 'nonce': nonce.toString()] )
             } else {
                 ///Go for the launch
@@ -92,8 +93,16 @@ class LtiController {
         def nonce = params.get("nonce")
         def submit = params.get("submit") 
         if( nonce != null && nonce == session["nonce"] || submit != null || submit == "submit" ){
-            //save incoming values to lti_resource_link
-            //add extra parameters to engine
+            ///save incoming values to lti_resource_link
+            def extra = new HashMap<String, String>()
+            for(p in params) {
+                //This can be done with regexp but I'll do it later on
+                //    if( p.key.matches("extra_%") )
+                if( p.key.length() > 6 && p.key.substring(0, 6) == 'extra_'){
+                    extra.put(p.key.substring(6), p.value)
+                }
+            }
+            ambasadoroService.setExtraParameters(session["lti_launch_id"], extra )
         }
 
         //Redirect to where it is supposed to return or to a bye,bye page

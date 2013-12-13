@@ -2,6 +2,8 @@ package com.ambasadoro
 
 import com.ambasadoro.engine.IEngine
 import com.ambasadoro.exceptions.AmbasadoroException
+
+import org.json.JSONObject;
 import org.lti.api.LTIRoles
 
 import net.oauth.OAuth;
@@ -287,5 +289,20 @@ class AmbasadoroService {
             log.debug " - No extra parameters"
         }
         return parameters
+    }
+
+    def setExtraParameters(lti_launch_id, extra){
+        LtiLaunch ltiLaunch = LtiLaunch.findById(lti_launch_id)
+        if( ltiLaunch != null ){
+            LtiResourceLink ltiResourceLink = ltiLaunch.getLtiResourceLink()
+            def resourceLinkExtra = new JSONObject()
+            ltiResourceLink.setResourceLinkExtra("{'recording': 'false', 'duration': '1'}")
+            if ( !ltiResourceLink.save(flush:true) ){
+                log.debug " - The ltiResourceLink couldn't be updated with extraParameters"
+                throw new AmbasadoroException("The ltiResourceLink couldn't be updated with extraParameters", "AmbasadoroError")
+            } else {
+                log.debug " - The ltiResourceLink was successfuly updated with extraParameters"
+            }
+        }
     }
 }
