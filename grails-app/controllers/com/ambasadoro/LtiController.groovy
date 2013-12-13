@@ -91,20 +91,18 @@ class LtiController {
         ambasadoroService.logParameters(parameters)
         def nonce = params.get("nonce")
         def submit = params.get("submit") 
-        if( !nonce || nonce != session["nonce"] || !submit || submit == "cancel" ){
-            //Redirect to where it is supposed to return or to a bye,bye page
-            def returnUrl = parameters.get("launch_presentation_return_url")
-            log.debug("returnUrl=" + returnUrl)
-            if( returnUrl && returnUrl != "" )
-                redirect(url: returnUrl)
-            else
-                render(view: "end")
-        } else if( params.get("submit")== "submit" ){
+        if( nonce != null && nonce == session["nonce"] || submit != null || submit == "submit" ){
             //save incoming values to lti_resource_link
             //add extra parameters to engine
-            def ssoURL = engine.getSSOURL()
-            redirect(url: ssoURL)
         }
+
+        //Redirect to where it is supposed to return or to a bye,bye page
+        def returnUrl = parameters.get("launch_presentation_return_url")
+        log.debug("returnUrl=" + returnUrl)
+        if( returnUrl && returnUrl != "" )
+            redirect(url: returnUrl)
+        else
+            render(view: "end")
     }
     
 	def tool_cartridge = {
