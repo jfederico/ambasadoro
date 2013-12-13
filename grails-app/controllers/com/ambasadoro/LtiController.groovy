@@ -19,6 +19,8 @@ import com.ambasadoro.exceptions.AmbasadoroException
 import org.lti.api.LTIRoles
 
 import net.oauth.OAuth;
+import org.apache.commons.net.ntp.TimeStamp
+
 
 class LtiController {
 
@@ -52,16 +54,21 @@ class LtiController {
             
             if( !ambasadoroService.hasAllExtraParameterSet(engine, ltiLaunch) ){
                 session["parameters"] = engine.getParameters()
+                def isLearner = true
                 //if( !LTIRoles.isLearner(engine.getParameter("roles"), LTIRoles.EXCLUSIVE) && !LTIRoles.isStudent(engine.getParameter("roles"), LTIRoles.EXCLUSIVE)) {
                 if( !LTIRoles.isLearner(engine.getParameter("roles"), true) && !LTIRoles.isStudent(engine.getParameter("roles"), true)) {
                     ///Present interface for setting up extraParameters   
                     log.debug "<<<< Present interface for setting up extraParameters >>>>"
+                    isLearner = false
                 } else {
                     ///Present error message telling learners that extraParameters are not set yet
                     log.debug "<<<< Present error message telling learners that extraParameters are not set yet >>>>"
                 }
                 //redirect(action:tool_ui, params:session["parameters"])
-                render(view: "tool_ui", model: ['extraParameters': ambasadoroService.getExtraParameters(engine), 'params': session["parameters"]])
+                log.debug("isLearner=" + isLearner)
+                def nonce = TimeStamp.getCurrentTime()
+                session["nonce"] = nonce.toString()
+                render( view: "tool_ui", model: ['extraParameters': ambasadoroService.getExtraParameters(engine), 'params': session["parameters"], 'isLearner': isLearner, 'nonce': nonce.toString()] )
             } else {
                 ///Go for the launch
                 log.debug "<<<< Go for the launch >>>>"
@@ -77,6 +84,28 @@ class LtiController {
         }
 	}
 	
+    def tool_ui = {
+        log.debug "###############toolUi###############"
+        ambasadoroService.logParameters(params)
+        def parameters = session["parameters"]
+        ambasadoroService.logParameters(parameters)
+        def nonce = params.get("nonce")
+        def submit = params.get("submit") 
+        if( !nonce || nonce != session["nonce"] || !submit || submit == "cancel" ){
+            //Redirect to where it is supposed to return or to a bye,bye page
+            def returnUrl = parameters.get("launch_presentation_return_url")
+            log.debug("returnUrl=" + returnUrl)
+            if( returnUrl && returnUrl != "" )
+                redirect(url: returnUrl)
+            else
+                render(view: "end")
+        } else if( params.get("submit")== "submit" ){
+            //save incoming values
+            //regenerate ssoURL
+            //do ssoURL
+        }
+    }
+    
 	def tool_cartridge = {
         log.debug "###############toolCartridge###############"
 		ambasadoroService.logParameters(params)
@@ -90,12 +119,6 @@ class LtiController {
         }
 	}
 	
-	def tool_ui = {
-        log.debug "###############toolUi###############"
-		ambasadoroService.logParameters(params)
-        render(view: "tool_ui")
-	}
-    
     private String getCartridgeXML(Ambasadoro ambasadoro, Object engineClass){
         def cartridge = '' +
         '<?xml version="1.0" encoding="UTF-8"?>' +

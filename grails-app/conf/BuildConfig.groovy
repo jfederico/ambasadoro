@@ -49,6 +49,7 @@ grails.project.dependency.resolution = {
         runtime   "org.bigbluebutton:bigbluebutton-api:1.0.5"
         runtime   "net.oauth:oauth:1.0.1"
         runtime   "org.lti:lti:1.0.4"
+        runtime   "commons-net:commons-net:3.0.1"
     }
 
     plugins {
