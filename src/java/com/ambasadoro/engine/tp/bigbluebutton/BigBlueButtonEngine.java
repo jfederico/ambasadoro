@@ -60,17 +60,14 @@ public class BigBlueButtonEngine extends EngineBase{
         Map<String, String> params = tp.getParameters();
         Map<String, String> meetingParams = new HashMap<String, String>();
         // Map ToolProvider parameters with Meeting parameters
-        //meetingParams.put("name", "Demo");
-        //meetingParams.put("meetingID", "A342344623445624");
-        //meetingParams.put("attendeePW", "ap");
-        //meetingParams.put("moderatorPW", "mp");
         meetingParams.put("name", getValidatedMeetingName(params.get("resource_link_title")));
         meetingParams.put("meetingID", getValidatedMeetingId(params.get("resource_link_id"), params.get("oauth_consumer_key")));
         meetingParams.put("attendeePW", DigestUtils.shaHex("ap" + params.get("resource_link_id") + params.get("oauth_consumer_key")));
         meetingParams.put("moderatorPW", DigestUtils.shaHex("mp" + params.get("resource_link_id") + params.get("oauth_consumer_key")));
-        ////meetingParams.put("voiceBridge", "0");
-        ////meetingParams.put("record", "false");
-        ////meetingParams.put("duration", "0");
+        meetingParams.put("welcome", params.containsKey("extra_welcome")? params.get("extra_welcome"): "");
+        meetingParams.put("voiceBridge", params.containsKey("extra_voicebridge")? params.get("extra_voicebridge"): "0");
+        meetingParams.put("record", params.containsKey("extra_recording")? params.get("extra_recording"): "false");
+        meetingParams.put("duration", params.containsKey("extra_duration")? params.get("extra_duration"): "0");
 
         return meetingParams;
     }
@@ -79,12 +76,6 @@ public class BigBlueButtonEngine extends EngineBase{
         Map<String, String> params = tp.getParameters();
         Map<String, String> sessionParams = new HashMap<String, String>();
         // Map LtiUser parameters with Session parameters
-        //sessionParams.put("fullName", "John");
-        //sessionParams.put("meetingID", "A342344623445624");
-        //sessionParams.put("password", "mp");
-        //sessionParams.put("createTime", "");
-        //sessionParams.put("userID", "");
-
         sessionParams.put("fullName", getValidatedUserFullName(params));
         sessionParams.put("meetingID", getValidatedMeetingId(params.get("resource_link_id"), params.get("oauth_consumer_key")));
         if( LTIRoles.isStudent(params.get("roles")) || LTIRoles.isLearner(params.get("roles")) )

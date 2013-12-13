@@ -100,9 +100,10 @@ class LtiController {
             else
                 render(view: "end")
         } else if( params.get("submit")== "submit" ){
-            //save incoming values
-            //regenerate ssoURL
-            //do ssoURL
+            //save incoming values to lti_resource_link
+            //add extra parameters to engine
+            def ssoURL = engine.getSSOURL()
+            redirect(url: ssoURL)
         }
     }
     

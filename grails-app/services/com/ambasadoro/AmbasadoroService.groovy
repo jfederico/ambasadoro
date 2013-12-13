@@ -239,8 +239,10 @@ class AmbasadoroService {
 
         ////Process the extra parameters:
         def extraParameters = engine.getJSONExtraParameters()
-        if(  extraParameters.length() > 0 ) {
+        if( extraParameters.length() > 0 ) {
             log.debug " - Extra parameters: " + extraParameters.toString()
+            LtiResourceLink ltiResourceLink = ltiLaunch.getLtiResourceLink()
+            log.debug "   - " + ltiResourceLink
             for( int i=0; i < extraParameters.length(); i++ ){
                 def extraParameter = extraParameters.getJSONObject(i)
                 def extraParameterName = extraParameter.getString("name");
@@ -248,8 +250,6 @@ class AmbasadoroService {
                 //def extraParameterType = extraParameter.getString("type");
                 //def extraParameterDefaultValue = extraParameter.getString("defaultValue");
                 ////Verify if "extraParameterName" is set for the corresponding LtiResourceLink
-                LtiResourceLink ltiResourceLink = ltiLaunch.getLtiResourceLink()
-                log.debug "   - " + ltiResourceLink
                 def extraParameterValue = ltiResourceLink.getExtraParameterValue(extraParameterName)
                 log.debug "   - extraParameterValue = " + extraParameterValue
                 if( !extraParameterValue ) {
