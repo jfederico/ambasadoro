@@ -66,7 +66,7 @@ public class BigBlueButtonEngine extends EngineBase{
         meetingParams.put("moderatorPW", DigestUtils.shaHex("mp" + params.get("resource_link_id") + params.get("oauth_consumer_key")));
         meetingParams.put("welcome", params.containsKey("extra_welcome")? params.get("extra_welcome"): "");
         meetingParams.put("voiceBridge", params.containsKey("extra_voicebridge")? params.get("extra_voicebridge"): "0");
-        meetingParams.put("record", params.containsKey("extra_recording")? params.get("extra_recording"): "false");
+        meetingParams.put("record", params.containsKey("extra_recording")? Boolean.valueOf(params.get("extra_recording")).toString(): "false");
         meetingParams.put("duration", params.containsKey("extra_duration")? params.get("extra_duration"): "0");
 
         return meetingParams;

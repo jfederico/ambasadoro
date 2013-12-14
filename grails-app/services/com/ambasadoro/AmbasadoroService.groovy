@@ -296,7 +296,11 @@ class AmbasadoroService {
         if( ltiLaunch != null ){
             LtiResourceLink ltiResourceLink = ltiLaunch.getLtiResourceLink()
             def resourceLinkExtra = new JSONObject()
-            ltiResourceLink.setResourceLinkExtra("{'recording': 'false', 'duration': '1'}")
+            for(e in extra) {
+                resourceLinkExtra.put(e.key, e.value)
+            }
+            log.debug("resourceLinkExtra = " + resourceLinkExtra.toString())
+            ltiResourceLink.setResourceLinkExtra(resourceLinkExtra.toString())
             if ( !ltiResourceLink.save(flush:true) ){
                 log.debug " - The ltiResourceLink couldn't be updated with extraParameters"
                 throw new AmbasadoroException("The ltiResourceLink couldn't be updated with extraParameters", "AmbasadoroError")
