@@ -16,6 +16,7 @@ class LtiResourceLink {
     String resourceLinkTitle
     String resourceLinkDescription
     String resourceLinkExtra
+    Integer resourceLinkExtraReset
 
     static hasMany = [ltiLaunches:LtiLaunch]
     static mapping = {
@@ -37,11 +38,15 @@ class LtiResourceLink {
         } catch( Exception e){
         }
         return extraParameterValue
-        
-        //for(int i=0; i < extraParameters.length(); i++){
-        //    if( extraParameters.getJSONArray('name') == name ){
-        //        return extraParameters.getJSONArray('name')
-        //   }
-        //}
+    }
+
+    String getSpecialParameterValue(name){
+        def specialParameterValue = null
+        try{
+            JSONObject specialParameters = new JSONObject(this.resourceLinkSpecial)
+            specialParameterValue = specialParameters.getString(name)
+        } catch( Exception e){
+        }
+        return specialParameterValue
     }
 }

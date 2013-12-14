@@ -12,6 +12,7 @@ public interface IEngine {
     public String getToolVendorCode();
     public JSONArray getJSONProperties();
     public JSONArray getJSONRequiredParameters();
+    public boolean hasExtraParameters();
     public JSONArray getJSONExtraParameters();
     public JSONArray getJSONOverride();
     public LTIToolProvider getToolProvider();

@@ -51,31 +51,33 @@ class LtiController {
             ambasadoroService.logParameters(engine.getParameters())
             
             LtiLaunch ltiLaunch = ambasadoroService.saveLtiLaunch(engine)
-            
-            if( !ambasadoroService.hasAllExtraParameterSet(engine, ltiLaunch) ){
-                session["parameters"] = engine.getParameters()
-                def isLearner = true
-                //if( !LTIRoles.isLearner(engine.getParameter("roles"), LTIRoles.EXCLUSIVE) && !LTIRoles.isStudent(engine.getParameter("roles"), LTIRoles.EXCLUSIVE)) {
-                if( !LTIRoles.isLearner(engine.getParameter("roles"), true) && !LTIRoles.isStudent(engine.getParameter("roles"), true)) {
-                    ///Present interface for setting up extraParameters   
-                    log.debug "<<<< Present interface for setting up extraParameters >>>>"
-                    isLearner = false
+
+            if( engine.hasExtraParameters() ) {
+                if ( !ambasadoroService.hasExtraParameterSet(ltiLaunch) ){
+                    session["parameters"] = engine.getParameters()
+                    def isLearner = true
+                    //if( !LTIRoles.isLearner(engine.getParameter("roles"), LTIRoles.EXCLUSIVE) && !LTIRoles.isStudent(engine.getParameter("roles"), LTIRoles.EXCLUSIVE)) {
+                    if( !LTIRoles.isLearner(engine.getParameter("roles"), true) && !LTIRoles.isStudent(engine.getParameter("roles"), true)) {
+                        ///Present interface for setting up extraParameters
+                        log.debug "<<<< Present interface for setting up extraParameters >>>>"
+                        isLearner = false
+                    } else {
+                        ///Present error message telling learners that extraParameters are not set yet
+                        log.debug "<<<< Present error message telling learners that extraParameters are not set yet >>>>"
+                    }
+                    def nonce = TimeStamp.getCurrentTime()
+                    session["nonce"] = nonce.toString()
+                    session["lti_launch_id"] = ltiLaunch.getId()
+                    render( view: "tool_ui", model: ['extraParameters': ambasadoroService.getExtraParameters(engine), 'params': session["parameters"], 'isLearner': isLearner, 'nonce': nonce.toString()] )
+                    return
                 } else {
-                    ///Present error message telling learners that extraParameters are not set yet
-                    log.debug "<<<< Present error message telling learners that extraParameters are not set yet >>>>"
+                    ambasadoroService.addExtraParameters(engine, ltiLaunch)
                 }
-                //redirect(action:tool_ui, params:session["parameters"])
-                log.debug("isLearner=" + isLearner)
-                def nonce = TimeStamp.getCurrentTime()
-                session["nonce"] = nonce.toString()
-                session["lti_launch_id"] = ltiLaunch.getId()
-                render( view: "tool_ui", model: ['extraParameters': ambasadoroService.getExtraParameters(engine), 'params': session["parameters"], 'isLearner': isLearner, 'nonce': nonce.toString()] )
-            } else {
-                ///Go for the launch
-                log.debug "<<<< Go for the launch >>>>"
-                def ssoURL = engine.getSSOURL()
-                redirect(url: ssoURL)
             }
+            ///Go for the launch
+            log.debug "<<<< Go for the launch >>>>"
+            def ssoURL = engine.getSSOURL()
+            redirect(url: ssoURL)
         } catch(AmbasadoroException e) {
             log.debug "  - AmbasadoroException: " + e.getErrorCode() + ":" + e.getLocalizedMessage()
             render(view: "error", model: ['resultMessageKey': e.getErrorCode(), 'resultMessage': e.getLocalizedMessage()])

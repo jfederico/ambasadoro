@@ -29,22 +29,22 @@ public class EngineBase implements IEngine {
         this.ambasadoro = ambasadoro;
         try {
             this.tpMeta = new JSONObject(ambasadoro.getTpMeta());
-            System.out.println(this.tpMeta);
+            log.debug("tpMeta = " + this.tpMeta);
             this.tcMeta = new JSONObject(ambasadoro.getTcMeta());
-            System.out.println(this.tcMeta);
+            log.debug("tcMeta = " + this.tcMeta);
 
             ltiStore = LTIStoreImpl.getInstance();
             this.tp = ltiStore.createToolProvider(endpoint, ambasadoro.getLtiKey(), ambasadoro.getLtiSecret(), params, "1.0");
             if( !this.tp.hasValidSignature() )
                 throw new AmbasadoroException("OAuth signature is NOT valid", "OAuthError" );
             else
-                System.out.println("OAuth signature is valid");
+                log.debug("OAuth signature is valid");
             
             this.tp.overrideParameters(getJSONOverride());
             if( !this.tp.hasRequiredParameters(getJSONRequiredParameters()) )
                 throw new AmbasadoroException("Missing required parameters", "OAuthError");
             else
-                System.out.println("All required parameters are included");
+                log.debug("All required parameters are included");
             
         } catch( Exception e) {
             throw e;
@@ -70,6 +70,11 @@ public class EngineBase implements IEngine {
 
     public JSONArray getJSONRequiredParameters(){
         return tpMeta.getJSONArray("requiredParameters");
+    }
+
+    public boolean hasExtraParameters(){
+        JSONArray extraParameters = tpMeta.getJSONArray("extraParameters");
+        return (extraParameters != null && extraParameters.length() > 0);
     }
 
     public JSONArray getJSONExtraParameters(){

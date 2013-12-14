@@ -203,6 +203,19 @@ class AmbasadoroService {
                 resourceLink.ltiContext = ltiContext
                 resourceLink.resourceLinkId = resourceLinkId
                 resourceLink.resourceLinkExtra = "{}"
+                resourceLink.resourceLinkExtraReset = 0
+            } else {
+                log.debug( "resourceLinkExtraReset value is [" + resourceLink.resourceLinkExtraReset + "]" )
+                if( params.containsKey("custom_reset") ){
+                    Integer reset = Integer.valueOf(params.get("custom_reset"))
+                    if( reset > resourceLink.resourceLinkExtraReset ){
+                        log.debug("resourceLinkExtraReset will be set to [" + reset + "]")
+                        resourceLink.resourceLinkExtra = "{}"
+                        resourceLink.resourceLinkExtraReset = reset
+                    }
+                } else {
+                    resourceLink.resourceLinkExtraReset = 0
+                }
             }
             resourceLink.resourceLinkTitle = params.containsKey(ltiConstants.RESOURCE_LINK_TITLE) ? params.get(ltiConstants.RESOURCE_LINK_TITLE): ""
             resourceLink.resourceLinkDescription = params.containsKey(ltiConstants.RESOURCE_LINK_DESCRIPTION)? params.get(ltiConstants.RESOURCE_LINK_DESCRIPTION): ""
@@ -236,29 +249,37 @@ class AmbasadoroService {
         params.remove("controller")
     }
 
-    def hasAllExtraParameterSet(IEngine engine, LtiLaunch ltiLaunch){
-        def allExtraParameterSet = true
+    def hasExtraParameterSet(LtiLaunch ltiLaunch){
+        def extraParameterSet = false
 
+        LtiResourceLink ltiResourceLink = ltiLaunch.getLtiResourceLink()
+        try {
+            JSONObject extraParameterValues = new JSONObject(ltiResourceLink.getResourceLinkExtra())
+            if( extraParameterValues != null && extraParameterValues.length() > 0 )
+                extraParameterSet = true;
+        } catch (Exception e){
+            log.debug("Exception happened " + e.getMessage())
+        }
+
+        return extraParameterSet
+    }
+
+    def addExtraParameters(IEngine engine, LtiLaunch ltiLaunch){
         ////Process the extra parameters:
         def extraParameters = engine.getJSONExtraParameters()
         if( extraParameters.length() > 0 ) {
-            log.debug " - Extra parameters: " + extraParameters.toString()
+            log.debug " - Extra parameters registered: " + extraParameters.toString()
             LtiResourceLink ltiResourceLink = ltiLaunch.getLtiResourceLink()
-            log.debug "   - " + ltiResourceLink
+            log.debug " - Extra parameters saved: " + ltiResourceLink.getResourceLinkExtra()
             for( int i=0; i < extraParameters.length(); i++ ){
                 def extraParameter = extraParameters.getJSONObject(i)
                 def extraParameterName = extraParameter.getString("name");
                 log.debug "   - extraParameterName = " + extraParameterName
-                //def extraParameterType = extraParameter.getString("type");
-                //def extraParameterDefaultValue = extraParameter.getString("defaultValue");
                 ////Verify if "extraParameterName" is set for the corresponding LtiResourceLink
                 def extraParameterValue = ltiResourceLink.getExtraParameterValue(extraParameterName)
                 log.debug "   - extraParameterValue = " + extraParameterValue
-                if( !extraParameterValue ) {
-                    allExtraParameterSet = false;
-                    break;
-                } else {
-                    log.debug "   - adding the parameter"
+                if( extraParameterValue != null ) {
+                    log.debug "   - adding parameter " + extraParameterName
                     engine.putParameter("extra_" + extraParameterName, extraParameterValue )
                 }
             }
@@ -267,15 +288,13 @@ class AmbasadoroService {
         } else {
             log.debug " - No extra parameters"
         }
-
-        return allExtraParameterSet
     }
-    
+
     def getExtraParameters(IEngine engine){
         List<Map<String, String>> parameters = new ArrayList<Map<String, String>>()
         def extraParameters = engine.getJSONExtraParameters()
         if( extraParameters != null &&  extraParameters.length() > 0 ) {
-            log.debug " - Extra parameters: " + extraParameters.toString()
+            log.debug " - Extra parameters JSON: " + extraParameters.toString()
             for( int i=0; i < extraParameters.length(); i++ ){
                 def extraParameter = extraParameters.getJSONObject(i)
                 Map<String, String> parameter = new HashMap<String, String>()
@@ -284,7 +303,7 @@ class AmbasadoroService {
                 parameter.put("defaultValue", extraParameter.getString("defaultValue"))
                 parameters.add(parameter)
             }
-            log.debug " - Extra parameters: " + parameters.toString()
+            log.debug " - Extra parameters List<Map<String,String>>: " + parameters.toString()
         } else {
             log.debug " - No extra parameters"
         }
