@@ -64,10 +64,31 @@ public class BigBlueButtonEngine extends EngineBase{
         meetingParams.put("meetingID", getValidatedMeetingId(params.get("resource_link_id"), params.get("oauth_consumer_key")));
         meetingParams.put("attendeePW", DigestUtils.shaHex("ap" + params.get("resource_link_id") + params.get("oauth_consumer_key")));
         meetingParams.put("moderatorPW", DigestUtils.shaHex("mp" + params.get("resource_link_id") + params.get("oauth_consumer_key")));
-        meetingParams.put("welcome", params.containsKey("extra_welcome")? params.get("extra_welcome"): "");
+        try {
+            meetingParams.put("welcome", URLEncoder.encode(params.containsKey("extra_welcome")? params.get("extra_welcome"): "Welcome to <b>" + params.get("name") + "</b>", "UTF-8") );
+        } catch (UnsupportedEncodingException e) {
+            log.debug("Error encoding meetingName: " + e.getMessage());
+            meetingParams.put("welcome", "");
+        }
         meetingParams.put("voiceBridge", params.containsKey("extra_voicebridge")? params.get("extra_voicebridge"): "0");
-        meetingParams.put("record", params.containsKey("extra_recording")? Boolean.valueOf(params.get("extra_recording")).toString(): "false");
-        meetingParams.put("duration", params.containsKey("extra_duration")? params.get("extra_duration"): "0");
+        if(params.containsKey("extra_recording")){
+            meetingParams.put("record", Boolean.valueOf(params.get("extra_recording")).toString());
+            try {
+                meetingParams.put("welcome", meetingParams.get("welcome") + URLEncoder.encode("<br><br>This meeting is being recorded", "UTF-8"));
+            } catch (UnsupportedEncodingException e) {
+                log.debug("Error encoding meetingName: " + e.getMessage());
+            }
+        }
+        if(params.containsKey("extra_duration")){
+            meetingParams.put("duration", params.get("extra_duration"));
+            try {
+                meetingParams.put("welcome", meetingParams.get("welcome") + URLEncoder.encode("<br><br>The maximum duration for this meeting is ", "UTF-8") + params.get("extra_duration") + URLEncoder.encode(" minutes.", "UTF-8"));
+            } catch (UnsupportedEncodingException e) {
+                log.debug("Error encoding meetingName: " + e.getMessage());
+            }
+        }
+        if(params.containsKey("launch_presentation_return_url"))
+            meetingParams.put("logoutURL", params.get("launch_presentation_return_url"));
 
         return meetingParams;
     }

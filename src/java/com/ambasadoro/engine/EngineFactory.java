@@ -2,11 +2,15 @@ package com.ambasadoro.engine;
 
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 import com.ambasadoro.Ambasadoro;
 import com.ambasadoro.engine.tp.bigbluebutton.BigBlueButtonEngine;
 import com.ambasadoro.engine.tp.test.TestEngine;
 
 public class EngineFactory implements IEngineFactory {
+
+    private static final Logger log = Logger.getLogger(EngineFactory.class);
 
     private static final EngineFactory INSTANCE = new EngineFactory();
 
@@ -54,6 +58,7 @@ public class EngineFactory implements IEngineFactory {
                 //engineClass = YouTubeEngine.class;
             }
         } catch ( Exception e ){
+            log.debug("Exception: " + e.getLocalizedMessage());
             throw e;
         }
         

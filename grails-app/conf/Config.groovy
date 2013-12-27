@@ -61,6 +61,7 @@ grails.exceptionresolver.params.exclude = ['password']
 // configure auto-caching of queries by default (if false you can cache individual queries with 'cache: true')
 grails.hibernate.cache.queries = false
 
+grails.resources.debug = true
 environments {
     development {
         //grails.logging.jul.usebridge = true
@@ -92,6 +93,7 @@ log4j = {
     
     debug  'org.bigbluebutton.api',
            'org.bigbluebutton.impl',
+           'com.ambasadoro.engine',
            'com.ambasadoro.engine.tp.test',
            'com.ambasadoro.engine.tp.bigbluebutton'
 
@@ -107,10 +109,14 @@ log4j = {
            'org.hibernate',
            'net.sf.ehcache.hibernate',
            'org.bigbluebutton.api',
-           'org.bigbluebutton.impl'
+           'org.bigbluebutton.impl',
+           'com.ambasadoro.engine',
+           'com.ambasadoro.engine.tp.test',
+           'com.ambasadoro.engine.tp.bigbluebutton'
 
     info   'org.bigbluebutton.api',
            'org.bigbluebutton.impl',
+           'com.ambasadoro.engine',
            'com.ambasadoro.engine.tp.test',
            'com.ambasadoro.engine.tp.bigbluebutton'
 
