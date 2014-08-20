@@ -84,18 +84,18 @@ log4j = {
     //appenders {
     //    console name:'stdout', layout:pattern(conversionPattern: '%c{2} %m%n')
     //}
-    appenders {
-        rollingFile name:"logfile", maxFileSize:1000000, file:"/var/log/ambasadoro/ambasadoro.log", layout:pattern(conversionPattern: '%d{[dd.MM.yy HH:mm:ss.SSS]} %-5p %c %x - %m%n')
-        console name:'console', layout:pattern(conversionPattern: '%d{[dd.MM.yy HH:mm:ss.SSS]} %-5p %c %x - %m%n')
-        'null' name:'stacktrace'
-    }
-    debug logfile:  'grails.app'
+    //appenders {
+    //    rollingFile name:"logfile", maxFileSize:1000000, file:"/var/log/ambasadoro/ambasadoro.log", layout:pattern(conversionPattern: '%d{[dd.MM.yy HH:mm:ss.SSS]} %-5p %c %x - %m%n')
+    //    console name:'console', layout:pattern(conversionPattern: '%d{[dd.MM.yy HH:mm:ss.SSS]} %-5p %c %x - %m%n')
+    //    'null' name:'stacktrace'
+    //}
+    //debug logfile:  'grails.app'
     
-    debug  'org.bigbluebutton.api',
-           'org.bigbluebutton.impl',
-           'com.ambasadoro.engine',
-           'com.ambasadoro.engine.tp.test',
-           'com.ambasadoro.engine.tp.bigbluebutton'
+    //debug  'org.bigbluebutton.api',
+    //       'org.bigbluebutton.impl',
+    //       'com.ambasadoro.engine',
+    //       'com.ambasadoro.engine.tp.test',
+    //       'com.ambasadoro.engine.tp.bigbluebutton'
 
     error  'org.codehaus.groovy.grails.web.servlet',        // controllers
            'org.codehaus.groovy.grails.web.pages',          // GSP
@@ -107,17 +107,17 @@ log4j = {
            'org.codehaus.groovy.grails.orm.hibernate',      // hibernate integration
            'org.springframework',
            'org.hibernate',
-           'net.sf.ehcache.hibernate',
-           'org.bigbluebutton.api',
-           'org.bigbluebutton.impl',
-           'com.ambasadoro.engine',
-           'com.ambasadoro.engine.tp.test',
-           'com.ambasadoro.engine.tp.bigbluebutton'
+           'net.sf.ehcache.hibernate'
+           //'org.bigbluebutton.api',
+           //'org.bigbluebutton.impl',
+           //'com.ambasadoro.engine',
+           //'com.ambasadoro.engine.tp.test',
+           //'com.ambasadoro.engine.tp.bigbluebutton'
 
-    info   'org.bigbluebutton.api',
-           'org.bigbluebutton.impl',
-           'com.ambasadoro.engine',
-           'com.ambasadoro.engine.tp.test',
-           'com.ambasadoro.engine.tp.bigbluebutton'
+    //info   'org.bigbluebutton.api',
+    //       'org.bigbluebutton.impl',
+    //       'com.ambasadoro.engine',
+    //       'com.ambasadoro.engine.tp.test',
+    //       'com.ambasadoro.engine.tp.bigbluebutton'
 
 }
