@@ -55,7 +55,6 @@ grails.project.dependency.resolution = {
         // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes e.g.
 
         runtime 'mysql:mysql-connector-java:5.1.26'
-        //runtime 'org.projectlombok:lombok-maven:0.11.8.0'
         runtime 'org.json:json:20140107'
         runtime 'net.oauth:oauth:1.0.1'
         runtime 'org.lti:lti:1.0.11'
@@ -66,12 +65,14 @@ grails.project.dependency.resolution = {
 
     plugins {
         // plugins for the build system only
-        build ":tomcat:7.0.50.1"
+        build ':tomcat:7.0.50.1'
 
         // plugins for the compile step
         compile ':scaffolding:2.0.2'
         compile ':cache:1.1.1'
-		compile ':ambasadoro-plugin:0.1'
+		compile ':ambasadoro-plugin:0.2'
+		compile ':ambasadoro-plugin-test:0.1'
+		compile ':ambasadoro-plugin-bigbluebutton:0.3'
 
         // plugins needed at runtime but not for compilation
         runtime ":hibernate:3.6.10.8" // or ":hibernate4:4.3.1.1"
