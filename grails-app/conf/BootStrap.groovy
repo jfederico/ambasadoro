@@ -51,9 +51,6 @@ class BootStrap {
         } else {
             log.debug "Ambasadoro instance for BigBlueButton saved"
         }
-
-        
-        
     }
     def destroy = {
     }

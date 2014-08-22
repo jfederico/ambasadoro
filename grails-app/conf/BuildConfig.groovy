@@ -70,9 +70,10 @@ grails.project.dependency.resolution = {
         // plugins for the compile step
         compile ':scaffolding:2.0.2'
         compile ':cache:1.1.1'
-		compile ':ambasadoro-plugin:0.2'
-		compile ':ambasadoro-plugin-test:0.1'
-		compile ':ambasadoro-plugin-bigbluebutton:0.3'
+
+        compile ':ambasadoro-plugin:0.2'
+        compile ':ambasadoro-plugin-test:0.1'
+        compile ':ambasadoro-plugin-bigbluebutton:0.3'
 
         // plugins needed at runtime but not for compilation
         runtime ":hibernate:3.6.10.8" // or ":hibernate4:4.3.1.1"
