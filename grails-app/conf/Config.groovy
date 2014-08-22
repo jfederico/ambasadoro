@@ -84,7 +84,7 @@ log4j = {
     appenders {
         rollingFile name:"logfile", maxFileSize:20971520, maxBackups:52, file:"/var/log/ambasadoro/ambasadoro.log", layout:pattern(conversionPattern: '%d{[dd.MM.yy HH:mm:ss.SSS]} %-5p %c %x - %m%n')
         console name:'console', layout:pattern(conversionPattern: '%d{[dd.MM.yy HH:mm:ss.SSS]} %-5p %c %x - %m%n')
-        //'null' name:'stacktrace'
+        'null' name:'stacktrace'
     }
     debug logfile:"grails.app"
     

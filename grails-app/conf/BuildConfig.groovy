@@ -71,7 +71,7 @@ grails.project.dependency.resolution = {
         compile ':scaffolding:2.0.2'
         compile ':cache:1.1.1'
 
-        compile ':ambasadoro-plugin:0.2'
+        compile ':ambasadoro-plugin:0.4'
         compile ':ambasadoro-plugin-test:0.1'
         compile ':ambasadoro-plugin-bigbluebutton:0.3'
 
