@@ -14,7 +14,7 @@ import com.ambasadoro.engine.EngineFactory
 import com.ambasadoro.engine.IEngine
 import com.ambasadoro.engine.IEngineFactory
 import com.ambasadoro.engine.VendorCodes
-import com.ambasadoro.exceptions.AmbasadoroException
+import com.ambasadoro.AmbasadoroException
 
 import org.lti.api.LTIRoles
 

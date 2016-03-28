@@ -1,7 +1,7 @@
 package com.ambasadoro
 
 import com.ambasadoro.engine.IEngine
-import com.ambasadoro.exceptions.AmbasadoroException
+import com.ambasadoro.AmbasadoroException
 
 import org.json.JSONObject;
 import org.lti.api.LTIRoles
